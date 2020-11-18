@@ -98,16 +98,16 @@ function cleaninput(full_name ,email,password, confirm_password){
     Swal.fire({
       icon: 'error',
       title: 'Sorry',
-      text: 'password does not match'
+      text: 'Password does not match'
     })
     return 1
 
   }
-  if( 5 >  password.length){
+  if(password.length < 5){
     Swal.fire({
       icon: 'error',
       title: 'Sorry',
-      text: 'password must be at least have 5 characters long '
+      text: 'Password must be at least have 5 characters long '
     })
     return 1
   }
