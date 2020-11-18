@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     var config = {
       method: "get",
-      url: `http://login.simplebar.dk/api/me`,
+      url: `https://login.simplebar.dk/api/me`,
       headers: { "Authorization": `Bearer ${sessionStorage.getItem('token')}` }
     };
     axios(config)
@@ -36,7 +36,7 @@ const logout = (event) => {
   document.getElementById("loader").style.display = "inline-block";
   var config = {
     method: 'post',
-    url: `http://login.simplebar.dk/api/logout`,
+    url: `https://login.simplebar.dk/api/logout`,
     headers: { "Authorization": `Bearer ${sessionStorage.getItem('token')}` }
   };
   
@@ -63,3 +63,6 @@ const logout = (event) => {
     }
   });
 };
+
+
+

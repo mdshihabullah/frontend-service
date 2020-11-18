@@ -17,9 +17,12 @@ const signup = (event) => {
   const password = document.getElementById("sign-up-password").value;
   const confirm_password = document.getElementById("sign-up-confirm-password").value;
   document.getElementById("loader").style.display = "inline-block";
+  if (cleaninput(full_name, email, password, confirm_password) === 1){
+    return
+  }
   var config = {
     method: 'post',
-    url: `http://login.simplebar.dk/api/register?name=${full_name}&email=${email}&password=${password}&password_confirmation=${confirm_password}`
+    url: `https://login.simplebar.dk/api/register?name=${full_name}&email=${email}&password=${password}&password_confirmation=${confirm_password}`
   };
   
   axios(config)
@@ -52,7 +55,7 @@ const login = (event) => {
   document.getElementById("loader").style.display = "inline-block";
   var config = {
     method: 'post',
-    url: `http://login.simplebar.dk/api/login?email=${email}&password=${password}`
+    url: `https://login.simplebar.dk/api/login?email=${email}&password=${password}`
   };
   
   axios(config)
@@ -78,3 +81,36 @@ const login = (event) => {
     }
   });
 };
+
+
+function cleaninput(full_name ,email,password, confirm_password){
+  if ( full_name.match(/[1-9]/g)){
+    Swal.fire({
+      icon: 'error',
+      title: 'Sorry',
+      text: 'You can not have numbers in your name',
+
+    })
+    return 1
+  }
+  if(password !== confirm_password){
+    console.log("fail")
+    Swal.fire({
+      icon: 'error',
+      title: 'Sorry',
+      text: 'password does not match'
+    })
+    return 1
+
+  }
+  if( 5 >  password.length){
+    Swal.fire({
+      icon: 'error',
+      title: 'Sorry',
+      text: 'password must be at least have 5 characters long '
+    })
+    return 1
+  }
+  return 0
+
+}
