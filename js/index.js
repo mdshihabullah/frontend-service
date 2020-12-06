@@ -16,20 +16,28 @@ const signup = (event) => {
   const email = document.getElementById("sign-up-email").value;
   const password = document.getElementById("sign-up-password").value;
   const confirm_password = document.getElementById("sign-up-confirm-password").value;
+  const user_role = document.querySelector('input[type=radio]:checked').value;
   document.getElementById("loader").style.display = "inline-block";
   if (cleaninput(full_name, email, password, confirm_password) === 1){
-    return
+    return;
   }
   var config = {
     method: 'post',
-    url: `https://login.simplebar.dk/api/register?name=${full_name}&email=${email}&password=${password}&password_confirmation=${confirm_password}`
+    url: `https://login.simplebar.dk/api/register?name=${full_name}&email=${email}&password=${password}&password_confirmation=${confirm_password}&role=${user_role}`
   };
   
   axios(config)
   .then(function (response) {
     console.log("API RESPONSE: ", JSON.stringify(response.data));
-    const token = response.data;
+    console.log(response.data);
     document.getElementById("loader").style.display = "none";
+    Swal.fire({
+      icon: 'success',
+      title: 'Great!',
+      text: 'Registration was successful',
+      footer: 'Please log in using the credentials'
+    });
+
   })
   .catch(function (error) {
     if (error.response) {
@@ -38,8 +46,15 @@ const signup = (event) => {
         Swal.fire({
           icon: 'error',
           title: 'Sorry',
-          text: 'The email is either taken or unavailable',
-          footer: 'Use different email address'
+          text: 'The email is unavailable',
+          footer: 'Please register with different email address'
+        });
+      }
+      if(error.response.status == 409){
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry',
+          text: 'User Registration failed!'
         })
       }
 
@@ -60,14 +75,22 @@ const login = (event) => {
   
   axios(config)
   .then(function (response) {
-    console.log("API RESPONSE: ", JSON.stringify(response.data));
+    console.log("API RESPONSE: ", response.data);
     const token = response.data.token;
     sessionStorage.setItem('token', token);
     document.getElementById("loader").style.display = "none";
-    window.location.replace('user.html');
+    const role = response.data.role[0];
+    if (role == "student"){
+      window.location.replace('student-dashboard.html');
+    }
+    else if(role == "teacher"){
+      window.location.replace('teacher-dashboard.html');
+    }
+    
   })
   .catch(function (error) {
     if (error.response) {
+      console.log(error.response);
       document.getElementById("loader").style.display = "none";
       if(error.response.status == 401){
         Swal.fire({
@@ -75,6 +98,14 @@ const login = (event) => {
           title: 'Oops...',
           text: 'Credentials are either invalid or mismatched.',
           footer: 'Please try again'
+        })
+      }
+      else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Oh no!',
+          text: 'Server is currently down',
+          footer: 'Please try again later. Thank you for your patience!'
         })
       }
 
