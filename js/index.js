@@ -86,6 +86,9 @@ const login = (event) => {
     else if(role == "teacher"){
       window.location.replace('teacher-dashboard.html');
     }
+    else if(role == "admin"){
+      window.location.replace('admin-dashboard.html')
+    }
     
   })
   .catch(function (error) {
