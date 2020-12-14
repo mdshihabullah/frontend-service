@@ -14,6 +14,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const role = response.data.role[0];
         let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+        config = {
+          method: "get",
+          url: `https://course.simplebar.dk/api/me`,
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        };
+
+        axios(config)
+          .then(function (response) {
+          console.log("Course assignment INFO \n", response.data)
+            
+          }).catch(function (error) {
+            console.log("Error", error);
+          });
         //TODO GET NAME OF COURSES FROM API
         let list_tab = document.getElementById("list-tab");
         //GET FROM API
@@ -34,6 +47,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         ];
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
+          
             list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index]}<span class="badge badge-dark badge-pill">${assignment_list[index].length}</span></a>`;
           } else {
             list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index]}<span class="badge badge-dark badge-pill">${assignment_list[index].length}</span></a>`;
@@ -88,7 +102,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             list_tab_html_content += `</div></div>`;
           }
         }
-        console.log(list_tab_html_content);
+        // console.log(list_tab_html_content);
         document.getElementById("nav-tabContent").innerHTML = list_tab_html_content;
       })
       .catch(function (error) {

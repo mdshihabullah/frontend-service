@@ -27,22 +27,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
         this.validateFileSize("#input-docker-file");
         //UPLOAD ASSIGNMENT
         const uploadAssignmentForm = document.getElementById("make-assignment");
-        const inputTestFile = document.getElementById("input-test-file");
         const inputDockerFile = document.getElementById("input-docker-file");
         const inputPDFFile = document.getElementById("input-pdf-file");
 
         uploadAssignmentForm.addEventListener("submit", (e) => {
           e.preventDefault();
           const makeAssignmentData = new FormData();
-          const testFileData = new FormData();
-          const dockerFileData = new FormData()
+          const dockerFileData = new FormData();
+          let assignment_details={};
           //Append solution zip file
-          testFileData.append("test", inputTestFile.files[0]);
           dockerFileData.append("image", inputDockerFile.files[0]);
           makeAssignmentData.append("title", document.getElementById("title").value);
-          makeAssignmentData.append("description", document.getElementById("desc").value);
-          makeAssignmentData.append("course_id", document.getElementById("course_id").value);
-          makeAssignmentData.append("public", document.querySelector('input[type=radio]:checked').value);
+          makeAssignmentData.append("course_id", parseInt(document.getElementById("course_id").value));
+          makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
           makeAssignmentData.append("description",inputPDFFile.files[0]);
           //TODO
           //call make assignment API
@@ -57,39 +54,30 @@ window.addEventListener("DOMContentLoaded", (event) => {
             contentType: false,
             success: function (result) {
               console.log("SUCESS OF MAKE ASSIGN API");
+              console.log(result);
+              assignment_details =result;
+              //call upload docker api
+              // dockerFileData.append("assignment_id", result.assignment.id);
+              // $.ajax({
+              //   url: "https://upload.simplebar.dk/api/upload/docker",
+              //   type: "POST",
+              //   data: dockerFileData,
+              //   headers: {
+              //     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              //   },
+              //   processData: false,
+              //   contentType: false,
+              //   success: function (result) {
+              //     console.log("SUCESS OF DOCKER UPLOAD API");
+              //   },
+              // });
             },
             error: function (result) {
               console.log("FAILED MAKE ASSIGNMENT API CALL");
             }
           });
-          //call upload test and then upload docker api
-          $.ajax({
-            url: "https://upload.simplebar.dk/api/upload/test",
-            type: "POST",
-            data: testFileData,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-            processData: false,
-            contentType: false,
-            success: function (result) {
-              console.log("TESTESTST");
-            },
-          });
-          //call upload docker api
-          $.ajax({
-            url: "https://upload.simplebar.dk/api/upload/docker",
-            type: "POST",
-            data: dockerFileData,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-            processData: false,
-            contentType: false,
-            success: function (result) {
-              console.log("TESTESTST");
-            },
-          });
+  
+          
         });
       })
       .catch(function (error) {

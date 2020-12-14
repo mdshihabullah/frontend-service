@@ -42,6 +42,7 @@ section {
   top: 0;
   left: 0;
   background-color: rgb(56, 165, 238, 0);
+  overflow-y: scroll;
 }
 
 .container {
