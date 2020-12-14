@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service #forwards user request to replicas of pod run by deployment object
+metadata:
+  name: frontend-service #service name
+spec:
+  type: NodePort
+  ports:
+  - port: 80 #accepts request in 80
+    targetPort: 8000 #redirects to 8000
+  selector:
+    app: frontend-service #label of the pod(group or 1 or more container) 
+                          #we want to connect to
+---
+apiVersion: apps/v1
+kind: Deployment # deployments ensures there are some pods running
+#object type of front-end service in our case front-end service is a deployment object for kubernetes cluster
+metadata:
+  name: frontend-service
+spec:
+  replicas: 1 #how many pods I want to run it can be done dynamically
+  selector:
+    matchLabels:
+      app: frontend-service
+  template: #template for the pods to deploy
+    metadata:
+      labels:
+        app: frontend-service # everything labelled as frontend-service is part of deployment object named "front-end service"
+    spec:
+      containers:
+      - name: frontend-service
+        image: bjoernkjaer/frontend-service:0.1
+        ports:
+        - containerPort: 8000
+        env: # set inside in container
+        - name: MESSAGE
+          value: Hello from the first deployment!

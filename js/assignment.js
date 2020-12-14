@@ -22,6 +22,25 @@ window.addEventListener("DOMContentLoaded", (event) => {
           ? urlParams.get("created_at")
           : "";
         console.log("Assignment_title: ", typeof created_at);
+        
+        const deadline = urlParams.has("deadline")
+          ? urlParams.get("deadline")
+          : "";
+          document.getElementById("deadline").innerText = `DEADLINE: ${deadline}`;
+        console.log("Assignment Deadline: ", deadline);
+
+        const pdf_link = urlParams.has("pdf_link")
+          ? urlParams.get("pdf_link")
+          : "";
+        console.log("Assignment PDF LINK: ", pdf_link);
+
+        const assign_id = urlParams.has("id")
+          ? urlParams.get("id")
+          : "";
+        console.log("Assignment ID: ", parseInt(assign_id));
+        document.getElementById("assignment_id").value = assign_id;
+        // document.getElementById("pdf_link").src = pdf_link;
+        document.getElementById("pdf_link").src = "http://www.africau.edu/images/default/sample.pdf";
         //Check file size
         this.validateFileSize();
         //UPLOAD ASSIGNMENT
@@ -34,35 +53,58 @@ window.addEventListener("DOMContentLoaded", (event) => {
           const formData = new FormData();
           //Append solution zip file
           formData.append("solution", inputFile.files[0]);
-          //Append assignmentID zip file
-          // formData.append("assignmentID", "1234");
-          console.log(
-            "🚀 ~ file: assignment.js ~ line 84 ~ formData",
-            formData
-          );
-          console.log(
-            "🚀 ~ file: assignment.js ~ line 84 ~ inputfile",
-            inputFile.files[0]
-          );
-          $.ajax({
-            url: "https://upload.simplebar.dk/api/upload/solution",
-            type: "POST",
-            data: formData,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          
+          //Append assignmentID 
+          console.log("Assign_ID", document.getElementById("assignment_id").value)
+
+          formData.append("assignment_id", document.getElementById("assignment_id").value);
+          console.log("FormData", formData);
+          console.log("Inputfile", inputFile.files[0]);
+
+          // SOLUTION UPLOAD API CALL
+          // $.ajax({
+          //   url: "https://upload.simplebar.dk/api/upload/solution",
+          //   type: "POST",
+          //   data: formData,
+          //   headers: {
+          //     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          //   },
+          //   // cache: false,
+          //   processData: false,
+          //   contentType: false,
+          //   success: function (result) {
+          //     console.log("Solution uploaded successfully");
+          //     Swal.fire({
+          //       icon: "success",
+          //       title: "Uploaded successfully!",
+          //       text: "Your solution has been uploaded successfully.",
+          //       footer: "Please wait to get back the test results"
+          //     });
+          //   },
+          // });
+          $.ajax(
+            {
+              url: endPoint,
+              type: "POST",
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              },
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function (result) {
+                console.log("Solution uploaded successfully", result);
+                Swal.fire({
+                  icon: "success",
+                  title: "Uploaded successfully!",
+                  text: "Your solution has been uploaded successfully.",
+                  footer: "Please wait to get back the test results",
+                });
+              },
             },
-            processData: false,
-            contentType: false,
-            success: function (result) {
-              console.log("Solution uploaded successfully");
-              Swal.fire({
-                icon: "success",
-                title: "Uploaded successfully!",
-                text: "Your solution has been uploaded successfully.",
-                footer: "Please wait to get back the test results"
-              });
-            },
-          });
+            "json"
+          );
         });
       })
       .catch(function (error) {

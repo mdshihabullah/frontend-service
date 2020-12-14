@@ -23,39 +23,37 @@ window.addEventListener("DOMContentLoaded", (event) => {
           : "";
         console.log("Assignment_title: ", typeof created_at);
         //Check file size
-        this.validateFileSize("#input-test-file");
-        this.validateFileSize("#input-docker-file");
+        // this.validateFileSize("#input-test-file");
+        // this.validateFileSize("#input-docker-file");
         //UPLOAD ASSIGNMENT
-        const uploadAssignmentForm = document.getElementById("make-assignment");
-        const inputDockerFile = document.getElementById("input-docker-file");
-        const inputPDFFile = document.getElementById("input-pdf-file");
+        const uploadCourseForm = document.getElementById("make-assignment");
+        // const inputDockerFile = document.getElementById("input-docker-file");
+        // const inputPDFFile = document.getElementById("input-pdf-file");
 
-        uploadAssignmentForm.addEventListener("submit", (e) => {
+        uploadCourseForm.addEventListener("submit", (e) => {
           e.preventDefault();
-          const makeAssignmentData = new FormData();
-          const dockerFileData = new FormData();
-          let assignment_details={};
+          const makeCourseData = new FormData();
+          let course_details={};
           //Append solution zip file
-          dockerFileData.append("due-date", document.getElementById("due-date").value);
-          makeAssignmentData.append("title", document.getElementById("title").value);
-          makeAssignmentData.append("course_id", parseInt(document.getElementById("course_id").value));
-          makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
-          makeAssignmentData.append("description",inputPDFFile.files[0]);
+          const title = document.getElementById("course_title").value;
+          makeCourseData.append("title", title);
+          makeCourseData.append("description", document.getElementById("course_desc").value);
+          // makeCourseData.append("description",inputPDFFile.files[0]);
           //TODO
           //call make assignment API
           $.ajax({
-            url: "https://course.simplebar.dk/api/make_assignment",
+            url: "https://course.simplebar.dk/api/make_course",
             type: "POST",
-            data: makeAssignmentData,
+            data: makeCourseData,
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
             processData: false,
             contentType: false,
             success: function (result) {
-              console.log("SUCESS OF MAKE ASSIGN API \n");
+              console.log("SUCESS OF MAKE COURSE API \n");
               console.log(result);
-              assignment_details =result;
+              course_details =result;
               Swal.fire({
                 icon: "success",
                 title: "Done",
@@ -66,7 +64,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
               });
             },
             error: function (result) {
-              console.log("FAILED MAKE ASSIGNMENT API CALL");
+              console.log("FAILED MAKE COURSE API CALL");
             }
           });
   

@@ -14,29 +14,45 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const role = response.data.role[0];
         let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+        
+        config = {
+          method: "get",
+          url: `https://course.simplebar.dk/api/me`,
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        };
+
+        axios(config)
+          .then(function (response) {
+          console.log("Course assignment INFO \n", response.data);
+          let course_and_assignment_details = response.data;
         //TODO GET NAME OF COURSES FROM API
         let list_tab = document.getElementById("list-tab");
         //GET FROM API
-        let course_list = ["DS808", "DM873", "DM874", "DM870"];
-        //GET FROM API
-        let assignment_list = [
-          [
-            "Assignment 01",
-            "Assignment 02",
-            "Assignment 03",
-            "Final Assignment",
-            "Project 01",
-            "Bonus Assignment",
-          ],
-          ["Assignment 01", "Assignment 02", "Final Assignment"],
-          ["Assignment 01", "Final Assignment"],
-          ["Final Assignment"],
-        ];
+        let course_list = [];
+        let assignment_list = [];
+
+      console.log("Course_and_assignment_details", course_and_assignment_details);
+
+        course_and_assignment_details.courses.map((course) =>
+          course_list.push({
+            title: course.title,
+            code: course.id,
+            description: course.description,
+            assign_count: course.assignments ? course.assignments.length : 0,
+          })
+        );
+        course_and_assignment_details.courses.map((course) =>
+          assignment_list.push(course.assignments ?course.assignments: {})
+        );
+        console.log("Course_list", course_list);
+        console.log("Assignment_list", assignment_list);
+
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index]}<span class="badge badge-dark badge-pill">${assignment_list[index].length}</span></a>`;
+          
+            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
           } else {
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index]}<span class="badge badge-dark badge-pill">${assignment_list[index].length}</span></a>`;
+            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
           }
         }
         let list_tab_html_content = "";
@@ -47,15 +63,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 <div class="list-group">`;
 
             assignment_list[index].forEach((assignment) => {
-              let created_at = Date.parse('2020-11-29T12:59:00.000000Z');
+              let created_at = Date.parse(assignment.created_at);
               console.log("assign created at",created_at);
               let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-              let deadline = new Date('2020-11-29T12:59:00.000000Z').toDateString();
-              let assignment_desc = `This assignment is inspired by Gabin Belson who never ceased to amaze us just like Elrich Bachman.`;
+              let deadline = new Date('2020-12-20T12:59:00.000000Z').toDateString();
+              let assignment_desc = assignment.description;
               
               list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                   <div class="mb-1 d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><a href="assignment.html?title=${assignment}&created_at=${created_at}&deadline=${deadline}" style="text-decoration:none">${assignment}</a></h5>
+                    <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                     <small>Created: ${daysDifference} days ago</small>
                   </div>
                   <p class="mb-2">${assignment_desc}</p>
@@ -68,28 +84,34 @@ window.addEventListener("DOMContentLoaded", (event) => {
             list_tab_html_content += `<div class="tab-pane fade show" id="list-${course_list[index]}" role="tabpanel" aria-labelledby="list-${course_list[index]}-list">
                 <div class="list-group">`;
 
-            assignment_list[index].forEach((assignment) => {
-              let created_at = Date.parse('2020-11-29T12:59:00.000000Z');
-              console.log("assign created at",created_at);
-              let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-              let deadline = new Date('2020-11-29T12:59:00.000000Z').toDateString();
-              let assignment_desc = `This assignment is inspired by Gabin Belson who never ceased to amaze us just like Elrich Bachman.`;
-              
-              list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
+                assignment_list[index].forEach((assignment) => {
+                  let created_at = Date.parse(assignment.created_at);
+                  console.log("assign created at",created_at);
+                  let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
+                  let deadline = new Date('2020-12-20T12:59:00.000000Z').toDateString();
+                  let assignment_desc = assignment.description;
+                  
+                  list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                       <div class="mb-1 d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><a href="assignment.html?title=${assignment}&created_at=${created_at}&deadline=${deadline}" style="text-decoration:none">${assignment}</a></h5>
+                        <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                         <small>Created: ${daysDifference} days ago</small>
                       </div>
                       <p class="mb-2">${assignment_desc}</p>
                       <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
                     </div>`;
-            });
+                });
 
             list_tab_html_content += `</div></div>`;
           }
         }
-        console.log(list_tab_html_content);
+        // console.log(list_tab_html_content);
         document.getElementById("nav-tabContent").innerHTML = list_tab_html_content;
+          
+          
+          }).catch(function (error) {
+            console.log("Error", error);
+          });
+
       })
       .catch(function (error) {
         if (error.response) {
