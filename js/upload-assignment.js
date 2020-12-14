@@ -23,8 +23,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           : "";
         console.log("Assignment_title: ", typeof created_at);
         //Check file size
-        this.validateFileSize("#input-test-file");
-        this.validateFileSize("#input-docker-file");
+        this.validateFileSize("#input-pdf-file");
         //UPLOAD ASSIGNMENT
         const uploadAssignmentForm = document.getElementById("make-assignment");
         const inputPDFFile = document.getElementById("input-pdf-file");
