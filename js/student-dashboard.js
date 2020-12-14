@@ -12,6 +12,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const name = response.data.user.name;
         const email = response.data.user.email;
         const role = response.data.role[0];
+        if (role !== "student"){
+            window.location.replace("index.html")
+        }
         let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
         

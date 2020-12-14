@@ -27,16 +27,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
         this.validateFileSize("#input-docker-file");
         //UPLOAD ASSIGNMENT
         const uploadAssignmentForm = document.getElementById("make-assignment");
-        const inputDockerFile = document.getElementById("input-docker-file");
         const inputPDFFile = document.getElementById("input-pdf-file");
 
         uploadAssignmentForm.addEventListener("submit", (e) => {
           e.preventDefault();
           const makeAssignmentData = new FormData();
-          const dockerFileData = new FormData();
           let assignment_details={};
           //Append solution zip file
-          dockerFileData.append("due-date", document.getElementById("due-date").value);
+          makeAssignmentData.append("due_date", document.getElementById("due-date").value);
           makeAssignmentData.append("title", document.getElementById("title").value);
           makeAssignmentData.append("course_id", parseInt(document.getElementById("course_id").value));
           makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
