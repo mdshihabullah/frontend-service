@@ -22,12 +22,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
           ? urlParams.get("created_at")
           : "";
         console.log("Assignment_title: ", typeof created_at);
-        //Check file size
-        this.validateFileSize("#input-pdf-file");
+
         //UPLOAD ASSIGNMENT
         const uploadAssignmentForm = document.getElementById("make-assignment");
         const inputPDFFile = document.getElementById("input-pdf-file");
-
+        //Check file size
+        console.log("inputPDFFile.files[0]", inputPDFFile.files[0])
+        this.validateFileSize("#input-pdf-file");
+        
         uploadAssignmentForm.addEventListener("submit", (e) => {
           e.preventDefault();
           const makeAssignmentData = new FormData();
@@ -38,6 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           makeAssignmentData.append("course_id", parseInt(document.getElementById("course_id").value));
           makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
           makeAssignmentData.append("description",inputPDFFile.files[0]);
+          
           //TODO
           //call make assignment API
           $.ajax({
@@ -90,9 +93,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 function validateFileSize(id) {
   $(id).on("change", function () {
     const size = (this.files[0].size / 1024 / 1024).toFixed(2);
-    if (size <= 5) {
+    if (size <= 10) {
       const extension = this.files[0].type.split('/')[1]
-      if ("application/x-zip-compressed".indexOf(extension) == -1) {
+      if ("application/pdf".indexOf(extension) == -1) {
         Swal.fire({
           icon: "error",
           title: "Invalid file",
@@ -103,7 +106,7 @@ function validateFileSize(id) {
       }
       return true;
     } else {
-      $('#input-file').val('');
+      $('#input-pdf-file').val('');
       Swal.fire({
         icon: "error",
         title: "Too large file",
