@@ -14,7 +14,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/student-dashboard.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
     <link rel="stylesheet" href="css/loader.css">
     <title>DM874 - Autograder</title>
 </head>
@@ -160,7 +160,8 @@
             </div>
             <div id="username">Hi</div>
             <div class="log-sign" style="--i: 1.8s">
-                <button class="btn btn-success" onclick="database()"> Database </button>
+                <button class="btn btn-success" onclick="database()"> Users </button>
+                <button class="btn btn-info" onclick="database()"> Courses </button>
                 <!-- <a href="index.html" class="btn solid">Sign up</a> -->
             </div>
             <div class="log-sign" style="--i: 1.8s">
@@ -176,8 +177,11 @@
         </div>
     </div>
 </header>
+
 <div class="container">
+
     <div class="jumbotron" id="logs" style="width: 100%; margin-top: 15px; border-radius: 15px">
+        <div style="margin-bottom: 40px"><h2> <b>Logs</b></h2></div>
     </div>
 </div>
 

@@ -160,6 +160,7 @@
             </div>
             <div id="username">Hi</div>
             <div class="log-sign" style="--i: 1.8s">
+                <button class="btn btn-info" onclick="getcourses()"> Courses </button>
                 <button class="btn btn-success" onclick="logs()"> logs </button>
                 <!-- <a href="index.html" class="btn solid">Sign up</a> -->
             </div>
@@ -177,14 +178,15 @@
     </div>
 </header>
 <div class="container">
+
     <div class="table-wrapper">
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-8"><h2> Users <b>Details</b></h2></div>
+                <div class="col-sm-8" id="description"><h2> Users <b>Details</b></h2></div>
 
             </div>
         </div>
-        <div class="buttons_to_get_role" style="margin-top: 20px;">
+        <div class="buttons_to_get_role" id="buttons" style="margin-top: 20px;">
             <button type="button" class="btn btn-primary" onclick="get_students()">Students</button>
             <button type="button" class="btn btn-secondary" onclick="get_teacher()">Teachers</button>
             <button type="button" class="btn btn-success" onclick="get_admin()">Admins</button>
@@ -205,6 +207,30 @@
             </tbody>
         </table>
     </div>
+    <div class="table-wrapper" style="margin-left: 50px; margin-top: 5px">
+        <div class="table-title">
+            <div class="row" style="white-space: nowrap">
+                <div class="col-sm-8" id="courses_des"><h2> Courses <b>Details</b></h2></div>
+
+            </div>
+        </div>
+
+        <table class="table table-bordered" style="margin-top: 48px" id="table_course">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>ID</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+            </tbody>
+        </table>
+    </div>
+    
+
 </div>
 
 

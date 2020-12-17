@@ -7,7 +7,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         };
         axios(config)
             .then(function (response) {
-                console.log(response.data);
                 document.getElementById("loader").style.display = "none";
                 const name = response.data.user.name;
                 const email = response.data.user.email;
@@ -29,7 +28,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         text: "Your session has expired",
                         footer: "Please try to login again.",
                     });
+                    window.location.replace("index.html");
                 }
+
             });
     } else {
         sessionStorage.removeItem("token");
@@ -56,13 +57,39 @@ function database(){
     window.location.replace("admin-dashboard.html");
 }
 
+function courses(){
+    window.location.replace("admin-course.html");
+}
+
 let log_document = ["First day was awesome", "Second nothing happend", "Third day suspisios activies", "Fourth day lamp went missing","Fifth day our statue of John was smashed", "Sixth day no one is here anymore, logs will stop coming"]
 
 function insertlogs(){
     let logs_container =  document.getElementById("logs");
-    for (let i = 0; i < log_document.length; i++){
-        logs_container.innerHTML = logs_container.innerHTML + "<p>" + log_document[i] + "</p>"
-    }
+
+    var config = {
+        method: "get",
+        url: `https://admin.simplebar.dk/api/logs`,
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+    };
+    axios(config)
+        .then(function (response) {
+            for (let i = 0; i < response.data["logs"].length; i++){
+                logs_container.innerHTML = logs_container.innerHTML + "<p>" +  JSON.stringify(response.data["logs"][i]) + "</p>"
+                if(i > 10){
+                    break
+                }
+            }
+
+            //let name_block = document.getElementById("username");
+            //name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+            //TODO GET NAME OF COURSES FROM API
+
+        })
+        .catch(function (error) {
+            console.log("failed to get logs")
+        });
 
 }
+
+
 
