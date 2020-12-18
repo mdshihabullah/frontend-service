@@ -71,7 +71,7 @@ section {
   border-style: solid;
   border-width: 5px;
 }
-.test-result-block {
+#test-result-block {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;

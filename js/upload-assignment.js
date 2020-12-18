@@ -37,14 +37,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
           //Append solution zip file
           makeAssignmentData.append("due_date", document.getElementById("due-date").value);
           makeAssignmentData.append("title", document.getElementById("title").value);
-          makeAssignmentData.append("course_id", parseInt(document.getElementById("course_id").value));
           makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
           makeAssignmentData.append("description",inputPDFFile.files[0]);
-          
+          const course_id = parseInt(document.getElementById("course_id").value);
+
           //TODO
           //call make assignment API
           $.ajax({
-            url: "https://course.simplebar.dk/api/make_assignment",
+            url: `https://course.simplebar.dk/api/course/${course_id}/assignment`,
             type: "POST",
             data: makeAssignmentData,
             headers: {

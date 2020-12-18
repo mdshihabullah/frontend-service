@@ -1,3 +1,5 @@
+var role;
+var pdf_link;
 window.addEventListener("DOMContentLoaded", (event) => {
   if (sessionStorage.getItem("token")) {
     var config = {
@@ -11,7 +13,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         document.getElementById("loader").style.display = "none";
         const name = response.data.user.name;
         const email = response.data.user.email;
-        const role = response.data.role[0];
+        const user_id = response.data.user.id;
+        role = response.data.role[0];
         let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
         const queryString = window.location.search;
@@ -29,7 +32,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           document.getElementById("deadline").innerText = `DEADLINE: ${deadline}`;
         console.log("Assignment Deadline: ", deadline);
 
-        const pdf_link = urlParams.has("pdf_link")
+        pdf_link = urlParams.has("pdf_link")
           ? urlParams.get("pdf_link")
           : "";
         console.log("Assignment PDF LINK: ", pdf_link);
@@ -37,10 +40,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const assign_id = urlParams.has("id")
           ? urlParams.get("id")
           : "";
+          const course_id = urlParams.has("course_id")
+          ? urlParams.get("course_id")
+          : "";
         console.log("Assignment ID: ", parseInt(assign_id));
         document.getElementById("assignment_id").value = assign_id;
-        // document.getElementById("pdf_link").src = pdf_link;
-        document.getElementById("pdf_link").src = "http://www.africau.edu/images/default/sample.pdf";
+        document.getElementById("pdf_link").src = pdf_link;
+        // document.getElementById("pdf_link").src = "http://www.africau.edu/images/default/sample.pdf";
         //Check file size
         this.validateFileSize();
         //UPLOAD ASSIGNMENT
@@ -49,7 +55,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         myForm.addEventListener("submit", (e) => {
           e.preventDefault();
-          const endPoint = "https://upload.simplebar.dk/api/upload/solution";
+          const endPoint = "https://upload.simplebar.dk/api/solution";
           const formData = new FormData();
           //Append solution zip file
           formData.append("solution", inputFile.files[0]);
@@ -60,28 +66,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           formData.append("assignment_id", document.getElementById("assignment_id").value);
           console.log("FormData", formData);
           console.log("Inputfile", inputFile.files[0]);
-
-          // SOLUTION UPLOAD API CALL
-          // $.ajax({
-          //   url: "https://upload.simplebar.dk/api/upload/solution",
-          //   type: "POST",
-          //   data: formData,
-          //   headers: {
-          //     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          //   },
-          //   // cache: false,
-          //   processData: false,
-          //   contentType: false,
-          //   success: function (result) {
-          //     console.log("Solution uploaded successfully");
-          //     Swal.fire({
-          //       icon: "success",
-          //       title: "Uploaded successfully!",
-          //       text: "Your solution has been uploaded successfully.",
-          //       footer: "Please wait to get back the test results"
-          //     });
-          //   },
-          // });
+          console.log("Solution upload API called");
           $.ajax(
             {
               url: endPoint,
@@ -95,12 +80,52 @@ window.addEventListener("DOMContentLoaded", (event) => {
               processData: false,
               success: function (result) {
                 console.log("Solution uploaded successfully", result);
+                const solution_id = result.solution_id;
+                const run_submission_end_point = "http://container.simplebar.dk/runsubmission";
                 Swal.fire({
                   icon: "success",
                   title: "Uploaded successfully!",
-                  text: "Your solution has been uploaded successfully.",
-                  footer: "Please wait to get back the test results",
+                  text: "Your solution is getting submitted.",
+                  footer: "Please wait while automatic submission in progress...",
                 });
+                continueFetching();
+                function continueFetching() {
+                  
+                  setTimeout(() => {
+                    console.log("countinue fetching........")
+                    $.ajax(
+                      {
+                        url: 'https://course.simplebar.dk/api/result',
+                        type: "GET",
+                        headers: {
+                          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                        },
+                        data: { 
+                          course_id: course_id, 
+                          assignment_id: assign_id
+                        },
+
+                        success: function (result) {
+                          // console.log("Fetching assignment result is successful", result);
+                          // Swal.fire({
+                          //   icon: "success",
+                          //   title: "Test Result Published!",
+                          //   text: `See your test result in sectioned name "Test Result"`
+                          // });
+                          if(result.Status == "Uploaded" || result.Status == "Testing started"){
+                            continueFetching();
+                          }else if(result.Status == "Completed"){
+                            console.log("Fetching assignment result is successful", result)
+                            document.getElementById("test-result-block").innerText= result.Result;
+                          }
+                          
+                        },
+                },
+                "json"
+              );
+                  }, 5000);
+                  
+                }
               },
             },
             "json"
@@ -153,9 +178,7 @@ function validateFileSize() {
 }
 //DOWNLOAD ASSIGNMENT
 $("#download-btn").on("click", function () {
-  assignId = "1234";
-  console.log("assignId", assignId)
-  document.getElementById("download-btn").href = "http://www.africau.edu/images/default/sample.pdf";
+  document.getElementById("download-btn").href = pdf_link;
 })
 
 const logout = (event) => {
@@ -172,3 +195,7 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
+
+$('#logo-block').click(function(){
+  role == "student" ? window.location.replace("student-dashboard.html") : window.location.replace("teacher-dashboard.html");
+});

@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           //TODO
           //call make assignment API
           $.ajax({
-            url: "https://course.simplebar.dk/api/make_course",
+            url: "https://course.simplebar.dk/api/course",
             type: "POST",
             data: makeCourseData,
             headers: {

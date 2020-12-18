@@ -12,12 +12,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const name = response.data.user.name;
         const email = response.data.user.email;
         const role = response.data.role[0];
-        if (role !== "student"){
-            window.location.replace("index.html")
-        }
         let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
-        
+        if(role == "student"){
+          
         config = {
           method: "get",
           url: `https://course.simplebar.dk/api/me`,
@@ -28,6 +26,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           .then(function (response) {
           console.log("Course assignment INFO \n", response.data);
           let course_and_assignment_details = response.data;
+
         //TODO GET NAME OF COURSES FROM API
         let list_tab = document.getElementById("list-tab");
         //GET FROM API
@@ -49,60 +48,74 @@ window.addEventListener("DOMContentLoaded", (event) => {
         );
         console.log("Course_list", course_list);
         console.log("Assignment_list", assignment_list);
+        // console.log("Assignment_list", assignment_list[1][0]);
 
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
           
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
+            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
           } else {
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index]}-list" data-toggle="list" href="#list-${course_list[index]}" role="tab" aria-controls="${course_list[index]}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
+            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
           }
         }
+
         let list_tab_html_content = "";
 
         for (let index = 0; index < assignment_list.length; index++) {
           if (index == 0) {
-            list_tab_html_content += `<div class="tab-pane fade show active" id="list-${course_list[index]}" role="tabpanel" aria-labelledby="list-${course_list[index]}-list">
+            list_tab_html_content += `<div class="tab-pane fade show active" id="list-${course_list[index].code}" role="tabpanel" aria-labelledby="list-${course_list[index].code}-list">
                 <div class="list-group">`;
+                  var assignment_each_course = assignment_list[index];
+                  for (let i = 0; i < assignment_each_course.length; i++) {
+                    const assignment = assignment_each_course[i];
+                    if (assignment !={}){
+                      console.log("assignment for course"+index, assignment);
+                    let created_at = Date.parse(assignment.created_at);
+                    console.log("assign created at",created_at);
+                    let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
+                    let deadline = new Date(assignment.due_date).toDateString();
+                    let assignment_desc = assignment.description;
+                    
+                    list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="mb-1 d-flex w-100 justify-content-between">
+                          <h5 class="mb-1"><a href="assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <small>Created: ${daysDifference} days ago</small>
+                        </div>
+                        <p class="mb-2">${assignment_desc}</p>
+                        <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
+                      </div>`;
 
-            assignment_list[index].forEach((assignment) => {
-              let created_at = Date.parse(assignment.created_at);
-              console.log("assign created at",created_at);
-              let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-              let deadline = new Date('2020-12-20T12:59:00.000000Z').toDateString();
-              let assignment_desc = assignment.description;
-              
-              list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
-                  <div class="mb-1 d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
-                    <small>Created: ${daysDifference} days ago</small>
-                  </div>
-                  <p class="mb-2">${assignment_desc}</p>
-                  <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                </div>`;
-            });
-
+                    }
+                  }             
+            
             list_tab_html_content += `</div></div>`;
           } else {
-            list_tab_html_content += `<div class="tab-pane fade show" id="list-${course_list[index]}" role="tabpanel" aria-labelledby="list-${course_list[index]}-list">
+            list_tab_html_content += `<div class="tab-pane fade show" id="list-${course_list[index].code}" role="tabpanel" aria-labelledby="list-${course_list[index].code}-list">
                 <div class="list-group">`;
 
-                assignment_list[index].forEach((assignment) => {
-                  let created_at = Date.parse(assignment.created_at);
-                  console.log("assign created at",created_at);
-                  let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-                  let deadline = new Date('2020-12-20T12:59:00.000000Z').toDateString();
-                  let assignment_desc = assignment.description;
-                  
-                  list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
-                      <div class="mb-1 d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
-                        <small>Created: ${daysDifference} days ago</small>
-                      </div>
-                      <p class="mb-2">${assignment_desc}</p>
-                      <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                    </div>`;
-                });
+                  assignment_each_course = assignment_list[index];
+                  for (let i = 0; i < assignment_each_course.length; i++) {
+                    const assignment = assignment_each_course[i];
+                    if (assignment !={}){
+                      console.log("assignment for course"+index, assignment);
+                    let created_at = Date.parse(assignment.created_at);
+                    console.log("assign created at",created_at);
+                    let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
+                    let deadline = new Date(assignment.due_date).toDateString();
+                    let assignment_desc = assignment.description;
+                    
+                    list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="mb-1 d-flex w-100 justify-content-between">
+                          <h5 class="mb-1"><a href="assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <small>Created: ${daysDifference} days ago</small>
+                        </div>
+                        <p class="mb-2">${assignment_desc}</p>
+                        <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
+                      </div>`;
+
+                    }
+                    
+                  }
 
             list_tab_html_content += `</div></div>`;
           }
@@ -114,6 +127,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
           }).catch(function (error) {
             console.log("Error", error);
           });
+        }else{
+          sessionStorage.removeItem("token");
+          window.location.replace("index.html");
+        }
 
       })
       .catch(function (error) {
