@@ -6,7 +6,7 @@ spec:
   type: NodePort
   ports:
   - port: 80 #accepts request in 80
-    targetPort: 8000 #redirects to 8000
+    targetPort: 80 #redirects to 80
   selector:
     app: frontend-service #label of the pod(group or 1 or more container) 
                           #we want to connect to
@@ -28,9 +28,6 @@ spec:
     spec:
       containers:
       - name: frontend-service
-        image: bjoernkjaer/frontend-service:0.1
+        image: dm874andreas/frontend-service:latest
         ports:
-        - containerPort: 8000
-        env: # set inside in container
-        - name: MESSAGE
-          value: Hello from the first deployment!
+        - containerPort: 80

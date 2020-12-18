@@ -22,6 +22,7 @@ docker push dm874andreas/frontend-service:${BUILD_ID}'''
     stage('Deploy') {
       steps {
         sh '''BUILD_ID=$(cat BUILD_ID)
+sudo kubectl apply -f deployment.yaml
 sudo kubectl set image deployment/frontend-service frontend-service=dm874andreas/frontend-service:${BUILD_ID}'''
       }
     }
