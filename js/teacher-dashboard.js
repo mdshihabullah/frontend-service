@@ -48,23 +48,26 @@ window.addEventListener("DOMContentLoaded", (event) => {
         );
         console.log("Course_list", course_list);
         console.log("Assignment_list", assignment_list);
-        console.log("Assignment_list", assignment_list[1][0]);
+        // console.log("Assignment_list", assignment_list[1][0]);
 
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
-          
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].title}-list" data-toggle="list" href="#list-${course_list[index].title}" role="tab" aria-controls="${course_list[index].title}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
+            list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
+            <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
+            </a>`;
           } else {
-            list_tab.innerHTML += `<a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].title}-list" data-toggle="list" href="#list-${course_list[index].title}" role="tab" aria-controls="${course_list[index].title}">${course_list[index].title}<span class="badge badge-dark badge-pill">${course_list[index].assign_count}</span></a>`;
+            list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
+            <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
+            </a>`;
           }
         }
-        list_tab.innerHTML += `<a href="upload-course.html" id="upload-course" class="mt-5 btn btn-success"><i class="fas fa-plus-circle pr-2"></i>Upload New Course</a>`
+        list_tab.innerHTML += `<a href="upload-course.html" id="upload-course" class="mt-5 btn btn-success"><i class="fas fa-plus-circle pr-2"></i>New Course</a>`
 
         let list_tab_html_content = "";
 
         for (let index = 0; index < assignment_list.length; index++) {
           if (index == 0) {
-            list_tab_html_content += `<div class="tab-pane fade show active" id="list-${course_list[index].title}" role="tabpanel" aria-labelledby="list-${course_list[index].title}-list">
+            list_tab_html_content += `<div class="tab-pane fade show active" id="list-${course_list[index].code}" role="tabpanel" aria-labelledby="list-${course_list[index].code}-list">
                 <div class="list-group">`;
                   var assignment_each_course = assignment_list[index];
                   for (let i = 0; i < assignment_each_course.length; i++) {
@@ -79,11 +82,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="mb-1 d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <h5 class="mb-1"><a href="teacher-assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                           <small>Created: ${daysDifference} days ago</small>
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
+                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
                         <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title} " onclick="deleteAssignment();" class= "btn btn-danger float-right">Delete</button>
                       </div>`;
 
@@ -92,7 +96,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             
             list_tab_html_content += `</div></div>`;
           } else {
-            list_tab_html_content += `<div class="tab-pane fade show" id="list-${course_list[index].title}" role="tabpanel" aria-labelledby="list-${course_list[index].title}-list">
+            list_tab_html_content += `<div class="tab-pane fade show" id="list-${course_list[index].code}" role="tabpanel" aria-labelledby="list-${course_list[index].code}-list">
                 <div class="list-group">`;
 
                   assignment_each_course = assignment_list[index];
@@ -108,12 +112,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="mb-1 d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><a href="assignment.html?id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <h5 class="mb-1"><a href="teacher-assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                           <small>Created: ${daysDifference} days ago</small>
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title}" onclick="deleteAssignment();" class= "btn btn-danger float-right">Delete</button>
+                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
+                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title}" onclick="deleteAssignment();" class= "btn btn-danger">Delete</button>
                       </div>`;
 
                     }
@@ -166,22 +171,23 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
-const deleteAssignment = (event) => {
+const deleteAssignment = () => {
 
-  const assign_id = document.getElementById("delete-assign-btn").value.split(",")[0];
+  const assign_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[0]);
   console.log("Assign_id", assign_id)
-  const course_id = document.getElementById("delete-assign-btn").value.split(",")[1];
+  const course_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[1]);
   console.log("Course_id", course_id)
   var result = confirm(`Do you confirm deleting "${document.getElementById("delete-assign-btn").value.split(",")[2]}"?`);
   if (result) {
     $.ajax({
-      url: 'https://course.simplebar.dk/api/delete_assignment' + '?' + $.param({"id": assign_id, "course_id" : course_id}),
+      url: `https://course.simplebar.dk/api/course/${course_id}/assignment/${assign_id}`,
       type: 'DELETE',
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
-      // processData: false,
-      // contentType: false,
+ //<-----this should be an object.
+      contentType:'application/json',  // <---add this
+      dataType: 'text',                // <---update this
       success: function (result) {
         console.log("SUCESS OF DELETE ASSIGNMENT API \n");
         console.log(result);
@@ -196,9 +202,82 @@ const deleteAssignment = (event) => {
         });
       },
       error: function (result) {
-        console.log("FAILED DELETE ASSIGNMENT API CALL");
+        console.log("FAILED DELETE ASSIGNMENT API CALL", result);
       }
-    });
+  });
   }
   
 };
+
+
+const deleteCourse = () => {
+
+  const course_id = document.getElementById("delete-course-btn").value.split(",")[0];
+  console.log("Course_id", course_id)
+  const course_title = document.getElementById("delete-course-btn").value.split(",")[1];
+  console.log("Course_title", course_title)
+  var result = confirm(`Do you confirm deleting "${course_title}"?`);
+  if (result) {
+    $.ajax({
+      url: `https://course.simplebar.dk/api/course/${course_id}`,
+      type: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+ //<-----this should be an object.
+      contentType:'application/json',  // <---add this
+      dataType: 'json',                // <---update this
+      success: function (result) {
+        console.log("SUCESS OF DELETE COURSE API \n");
+        console.log(result);
+        // course_details =result;
+        Swal.fire({
+          icon: "success",
+          title: "Done",
+          text: `Course  ${course_id} has been deleted successfully!`,
+          footer: "Click OK to go back to dashboard",
+        }).then(() => {
+          window.location.replace("teacher-dashboard.html");
+        });
+      },
+      error: function (result) {
+        console.log("FAILED DELETE COURSE API CALL", result);
+      }
+  });
+  }
+  
+};
+
+  const fetchAllSolutions = () => {
+    const assign_id = document.getElementById("fetch-solutions-btn").value;
+    console.log("assign_id", assign_id);
+    const fetch_all_solutions_end_point =
+      "https://course.simplebar.dk/api/fetch_bulk";
+    $.ajax(
+      {
+        url: fetch_all_solutions_end_point,
+        type: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        data: {
+          assignment_id: assign_id,
+          // assignment_id: 1
+        },
+
+        success: function (result) {
+          console.log("Fetching assignment result is successful", result);
+          Swal.fire({
+            icon: "success",
+            title: "All results are Fetched Published!",
+            text: `See your test result in sectioned name "Test Result"`,
+          });
+        },
+      },
+      "json"
+    );
+  };
+const showCourseUsers = (course_id) =>{
+console.log("Course_id when course clicked \n", course_id);
+document.getElementById("course-user").src= `./show-user-course.html?id=${course_id}`;
+}

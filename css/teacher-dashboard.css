@@ -45,9 +45,7 @@ section {
 }
 
 .container {
-  max-width: 65rem;
-  padding: 0 2rem;
-  margin: 0 auto;
+  max-width: initial;
   display: flex;
   position: relative;
 }
@@ -543,5 +541,5 @@ section {
   }
 }
 #upload-course{
-  height: 50px;
+  padding: 10px;
 }
