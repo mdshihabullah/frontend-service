@@ -52,13 +52,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
-            list_tab.innerHTML += `<a stytle=""class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
-            <span class="badge badge-dark badge-pill">${course_list[index].assign_count} </span>
+            list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
             <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
             </a>`;
           } else {
-            list_tab.innerHTML += `<a stytle=""class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
-            <span class="badge badge-dark badge-pill">${course_list[index].assign_count} </span>
+            list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
             <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
             </a>`;
           }
@@ -84,12 +82,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="mb-1 d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><a href="assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <h5 class="mb-1"><a href="teacher-assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                           <small>Created: ${daysDifference} days ago</small>
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Fetch Solutions</button>
+                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
                         <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title} " onclick="deleteAssignment();" class= "btn btn-danger float-right">Delete</button>
                       </div>`;
 
@@ -114,13 +112,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="mb-1 d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><a href="assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
+                          <h5 class="mb-1"><a href="teacher-assignment.html?course_id=${course_list[index].code}&id=${assignment.id}&title=${assignment.title}&created_at=${created_at}&deadline=${deadline}&pdf_link=${assignment_desc}" style="text-decoration:none">${assignment.title}</a></h5>
                           <small>Created: ${daysDifference} days ago</small>
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Fetch Solutions</button>
-                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title}" onclick="deleteAssignment();" class= "btn btn-danger float-right">Delete</button>
+                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
+                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title}" onclick="deleteAssignment();" class= "btn btn-danger">Delete</button>
                       </div>`;
 
                     }
@@ -173,7 +171,7 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
-const deleteAssignment = (event) => {
+const deleteAssignment = () => {
 
   const assign_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[0]);
   console.log("Assign_id", assign_id)
@@ -212,7 +210,7 @@ const deleteAssignment = (event) => {
 };
 
 
-const deleteCourse = (event) => {
+const deleteCourse = () => {
 
   const course_id = document.getElementById("delete-course-btn").value.split(",")[0];
   console.log("Course_id", course_id)
@@ -250,34 +248,36 @@ const deleteCourse = (event) => {
   
 };
 
-  const fetchAllSolutions = (event) => {
-
+  const fetchAllSolutions = () => {
     const assign_id = document.getElementById("fetch-solutions-btn").value;
     console.log("assign_id", assign_id);
-    const fetch_all_solutions_end_point = "https://course.simplebar.dk/api/fetch_bulk";
+    const fetch_all_solutions_end_point =
+      "https://course.simplebar.dk/api/fetch_bulk";
     $.ajax(
-    {
-      url: fetch_all_solutions_end_point,
-      type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-      data: { 
-        assignment_id: assign_id
-        // assignment_id: 1
-      },
+      {
+        url: fetch_all_solutions_end_point,
+        type: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        data: {
+          assignment_id: assign_id,
+          // assignment_id: 1
+        },
 
-      success: function (result) {
-        console.log("Fetching assignment result is successful", result);
-        Swal.fire({
-          icon: "success",
-          title: "All results are Fetched Published!",
-          text: `See your test result in sectioned name "Test Result"`
-        });
-        
+        success: function (result) {
+          console.log("Fetching assignment result is successful", result);
+          Swal.fire({
+            icon: "success",
+            title: "All results are Fetched Published!",
+            text: `See your test result in sectioned name "Test Result"`,
+          });
+        },
       },
-},
-"json"
-);
-    
+      "json"
+    );
   };
+const showCourseUsers = (course_id) =>{
+console.log("Course_id when course clicked \n", course_id);
+document.getElementById("course-user").src= `./show-user-course.html?id=${course_id}`;
+}

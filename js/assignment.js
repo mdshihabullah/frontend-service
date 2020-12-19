@@ -85,8 +85,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 Swal.fire({
                   icon: "success",
                   title: "Uploaded successfully!",
-                  text: "Your solution is getting submitted.",
-                  footer: "Please wait while automatic submission in progress...",
+                  text: "Your solution is getting tested.",
+                  footer: "Please wait while automatic evaluation in progress...",
                 });
                 continueFetching();
                 function continueFetching() {
@@ -106,17 +106,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         },
 
                         success: function (result) {
-                          // console.log("Fetching assignment result is successful", result);
-                          // Swal.fire({
-                          //   icon: "success",
-                          //   title: "Test Result Published!",
-                          //   text: `See your test result in sectioned name "Test Result"`
-                          // });
+
                           if(result.Status == "Uploaded" || result.Status == "Testing started"){
                             continueFetching();
                           }else if(result.Status == "Completed"){
-                            console.log("Fetching assignment result is successful", result)
-                            document.getElementById("test-result-block").innerText= result.Result;
+                            console.log("Fetching assignment result is successful", result);
+                            Swal.fire({
+                              icon: "success",
+                              title: "Evaluation completed!",
+                              text: "Your solution for the assignment is evaluated.",
+                              footer: "Please check below to see the test result...",
+                            }).then(()=>{
+                              document.getElementById("test-result-block").innerText= result.Result;
+                            });
                           }
                           
                         },
