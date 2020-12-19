@@ -136,8 +136,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
             console.log("Error", error);
           });
         }else{
-          sessionStorage.removeItem("token");
-          window.location.replace("index.html");
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "Only teachers are allowed!"
+          }).then(()=>{
+            sessionStorage.removeItem("token");
+            window.location.replace("index.html");
+          });
         }
 
       })
