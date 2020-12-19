@@ -73,13 +73,31 @@ function insertlogs(){
     };
     axios(config)
         .then(function (response) {
+            let table = document.getElementById("table").getElementsByTagName('tbody')[0];
             for (let i = 0; i < response.data["logs"].length; i++){
-                logs_container.innerHTML = logs_container.innerHTML + "<p>" +  JSON.stringify(response.data["logs"][i]) + "</p>"
-                if(i > 10){
+                let individual_log = response.data["logs"][i]
+                let row = table.insertRow(0);
+                let id = row.insertCell(0);
+                let action = row.insertCell(1);
+                let ip_address = row.insertCell(2);
+                let log = row.insertCell(3);
+                let created_at = row.insertCell(4);
+                let updated_at = row.insertCell(5);
+                let deleted_at = row.insertCell(6);
+                id.innerHTML = individual_log["id"]
+                action.innerHTML = individual_log["action"]
+                ip_address.innerHTML = individual_log["ip_address"]
+                log.innerHTML = JSON.stringify(individual_log["log"])
+                created_at.innerHTML = individual_log["created_at"]
+                updated_at.innerHTML = individual_log["updated_at"]
+                deleted_at.innerHTML = individual_log["deleted_at"]
+
+
+                if(i > 40){
                     break
                 }
             }
-
+            logs_container.innerHTML = stringcontent
             //let name_block = document.getElementById("username");
             //name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
             //TODO GET NAME OF COURSES FROM API
