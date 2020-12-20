@@ -39,6 +39,7 @@ $(document).ready(function () {
   // Delete row on delete button click
   $(document).on("click", ".delete", function () {
     const user_id = document.querySelector('.delete').id;
+    console.log("User_id", user_id)
     $.ajax({
         url:`https://course.simplebar.dk/api/assignment/${assign_id}/student/${user_id}`,
         type: 'DELETE',
@@ -64,6 +65,11 @@ $(document).ready(function () {
         },
         error: function (result) {
           console.log("FAILED DELETE ASSIGNMENT API CALL", result);
+          Swal.fire({
+            icon: "error",
+            title: "Unable to delete the user",
+            text: `${result.responseJSON.message}`
+          })
         }
     });
 

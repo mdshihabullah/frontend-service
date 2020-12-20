@@ -53,11 +53,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         for (let index = 0; index < course_list.length; index++) {
           if (index == 0) {
             list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action active" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
-            <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
+            <button id="delete-course-btn" style="z-index:2" onclick="deleteCourse('${course_list[index].code}','${course_list[index].title}');" class= "btn btn-danger text-right">Delete</button>
             </a>`;
           } else {
             list_tab.innerHTML += `<a onclick="showCourseUsers(${course_list[index].code});" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" id="list-${course_list[index].code}-list" data-toggle="list" href="#list-${course_list[index].code}" role="tab" aria-controls="${course_list[index].code}">${course_list[index].title}
-            <button id="delete-course-btn" value="${course_list[index].code},${course_list[index].title}" onclick="deleteCourse();" class= "btn btn-danger text-right">Delete</button>
+            <button id="delete-course-btn" style="z-index:2" onclick="deleteCourse('${course_list[index].code}','${course_list[index].title}');" class= "btn btn-danger text-right">Delete</button>
             </a>`;
           }
         }
@@ -87,8 +87,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
-                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title} " onclick="deleteAssignment();" class= "btn btn-danger float-right">Delete</button>
+                        <button id="fetch-solutions-btn" onclick="fetchAllSolutions('${assignment.id}');" class= "btn btn-primary">Solutions</button>
+                        <button id="delete-assign-btn" onclick="deleteAssignment('${assignment.id}', '${course_list[index].code}', '${assignment.title}');" class= "btn btn-danger float-right">Delete</button>
                       </div>`;
 
                     }
@@ -117,8 +117,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         </div>
                         <p class="mb-2">${assignment_desc}</p>
                         <small><mark><b style="color:#ff4136">Deadline: ${deadline}</b><mark></small>
-                        <button id="fetch-solutions-btn" value="${assignment.id}" onclick="fetchAllSolutions();" class= "btn btn-primary">Solutions</button>
-                        <button id="delete-assign-btn" value="${assignment.id},${course_list[index].code},${assignment.title}" onclick="deleteAssignment();" class= "btn btn-danger">Delete</button>
+                        <button id="fetch-solutions-btn" onclick="fetchAllSolutions('${assignment.id}');" class= "btn btn-primary">Solutions</button>
+                        <button id="delete-assign-btn" onclick="deleteAssignment('${assignment.id}', '${course_list[index].code}', '${assignment.title}');" class= "btn btn-danger float-right">Delete</button>
                       </div>`;
 
                     }
@@ -177,13 +177,13 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
-const deleteAssignment = () => {
+const deleteAssignment = (assign_id, course_id, assign_title) => {
 
-  const assign_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[0]);
-  console.log("Assign_id", assign_id)
-  const course_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[1]);
-  console.log("Course_id", course_id)
-  var result = confirm(`Do you confirm deleting "${document.getElementById("delete-assign-btn").value.split(",")[2]}"?`);
+  // const assign_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[0]);
+  console.log("Assign_id", assign_id);
+  // const course_id = parseInt(document.getElementById("delete-assign-btn").value.split(",")[1]);
+  console.log("Course_id", course_id);
+  var result = confirm(`Do you confirm deleting "${assign_title}"?`);
   if (result) {
     $.ajax({
       url: `https://course.simplebar.dk/api/course/${course_id}/assignment/${assign_id}`,
@@ -201,7 +201,7 @@ const deleteAssignment = () => {
         Swal.fire({
           icon: "success",
           title: "Done",
-          text: `Assignment  ${assign_id} has been deleted successfully!`,
+          text: `Assignment  ${assign_title} has been deleted successfully!`,
           footer: "Click OK to go back to dashboard",
         }).then(() => {
           window.location.replace("teacher-dashboard.html");
@@ -216,12 +216,12 @@ const deleteAssignment = () => {
 };
 
 
-const deleteCourse = () => {
-
-  const course_id = document.getElementById("delete-course-btn").value.split(",")[0];
-  console.log("Course_id", course_id)
-  const course_title = document.getElementById("delete-course-btn").value.split(",")[1];
-  console.log("Course_title", course_title)
+const deleteCourse = (course_id, course_title) => {
+  // e.stopPropagation();
+  // const course_id = document.getElementById("delete-course-btn").value.split(",")[0];
+  console.log("FROM DELETE COURSE METHOD===Course_id", course_id)
+  // const course_title = document.getElementById("delete-course-btn").value.split(",")[1];
+  console.log("FROM DELETE COURSE METHOD===Course_title", course_title)
   var result = confirm(`Do you confirm deleting "${course_title}"?`);
   if (result) {
     $.ajax({
@@ -254,8 +254,8 @@ const deleteCourse = () => {
   
 };
 
-  const fetchAllSolutions = () => {
-    const assign_id = document.getElementById("fetch-solutions-btn").value;
+  const fetchAllSolutions = (assign_id) => {
+    // const assign_id = document.getElementById("fetch-solutions-btn").value;
     console.log("assign_id", assign_id);
     const fetch_all_solutions_end_point =
       "https://course.simplebar.dk/api/fetch_bulk";

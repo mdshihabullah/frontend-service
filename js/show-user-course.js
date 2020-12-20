@@ -1,4 +1,4 @@
-$(document).ready(function () {
+window.addEventListener("DOMContentLoaded", (event) => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const course_id = urlParams.has("id") ? urlParams.get("id") : "";
@@ -23,13 +23,18 @@ $(document).ready(function () {
                 <td>${user.name}</td>
                 <td>${user.email}</td>             
                 <td>
-                    <a class="delete" id="${user.id}" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                    <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
                 </td>
             </tr>`;
         });
       },
       error: function (result) {
         console.log("Result", result);
+          Swal.fire({
+            icon: "error",
+            title: "Unable to delete the user",
+            text: `${result.responseJSON.message}`
+          });      
       },
     },
     "json"
@@ -38,7 +43,12 @@ $(document).ready(function () {
   $('[data-toggle="tooltip"]').tooltip();
   // Delete row on delete button click
   $(document).on("click", ".delete", function () {
-    const user_id = document.querySelector('.delete').id;
+    var result = confirm(`Are you sure you want to delete user named: ${$(this).closest('tr').find('td:eq(1)').text()} ?`);
+
+    if (result) {
+      const user_id =$(this).closest('tr').find('td:eq(0)').text();
+    console.log("User_id to delete from course",user_id )
+    
     $.ajax({
         url: `https://course.simplebar.dk/api/course/${course_id}/student/${user_id}`,
         type: 'DELETE',
@@ -60,12 +70,30 @@ $(document).ready(function () {
           }).then(() => {
             $(this).parents("tr").remove();
             $(".add-new").removeAttr("disabled");
+            window.location.reload(true);
+
           });
+
         },
         error: function (result) {
-          console.log("FAILED DELETE ASSIGNMENT API CALL", result);
+          console.log("Result", result);
+          if (result.status === 422) {
+            Swal.fire({
+              icon: "error",
+              title: "Unable to delete the user",
+              text: `${result.responseJSON.message}`
+            });
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title: "Unable to delete the user",
+              text: `${result.responseJSON.message}`
+            });
+          }
         }
-    });
+    });      
+    }
 
   });
 });

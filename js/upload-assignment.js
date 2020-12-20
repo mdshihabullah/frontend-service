@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
             makeAssignmentData.append("description",inputPDFFile.files[0]);
             const course_id = parseInt(document.getElementById("course_id").value);
-  
+            const assignment_title = document.getElementById("title").value;
             //TODO
             //call make assignment API
             $.ajax({
@@ -60,7 +60,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 Swal.fire({
                   icon: "success",
                   title: "Done",
-                  text: `Course named ${title} has been created successfully!`,
+                  text: `${assignment_title} has been created successfully!`,
                   footer: "Click OK to go back to dashboard",
                 }).then(() => {
                   window.location.replace("teacher-dashboard.html");

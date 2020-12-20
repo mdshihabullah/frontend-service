@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 Swal.fire({
                   icon: "success",
                   title: `${result.code.code}`,
-                  text: `Please use the above code to enroll student in the mentioned course or assignment`,
+                  text: `Copy and use the above code to enroll student in the mentioned course or assignment`,
                 }).then(() => {
                   window.location.replace("teacher-dashboard.html");
                 });
