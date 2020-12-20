@@ -143,6 +143,25 @@ function get_all(){
 function remove_content_from_table(){
     $('#table tbody').empty();
 }
+
+function insert_assignment_not_yet_added(assignment){
+    let table = document.getElementById("table_assignment").getElementsByTagName('tbody')[0];
+    for (let i= 0; i < assignment.length; i++){
+        let row = table.insertRow(0);
+        let name_cell = row.insertCell(0);
+        let ID_cell = row.insertCell(1);
+        let action_cell = row.insertCell(2);
+        let name = assignment[i]['title']
+        name_cell.innerHTML =   name
+        ID_cell.innerHTML = assignment[i]["id"]
+        action_cell.innerHTML = "<a class = 'insert_assignment_not_yet_added'><i   class='fa fa-check'></i></a>"
+    }
+}
+
+
+
+
+
 function insert_assignment(assignment){
     let table = document.getElementById("table_assignment").getElementsByTagName('tbody')[0];
     for (let i= 0; i < assignment.length; i++){
@@ -217,6 +236,7 @@ $(document).on("click", ".get_details", function(){
 $(document).on("click", ".get_assignments", function(){
     $('#table_assignment tbody').empty();
     let course_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
+  
     for (let i = 0; i < courses_used.length; i++){
         let course = courses_used[i]
         if (course.id === Number(course_id)){
@@ -394,9 +414,6 @@ $(document).on("click", ".get_nonadded_course", function(){
 $(document).on("click", ".insert_course_not_yet_added", function(){
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
     let user_id = used_user_id
-    $('#table_course tbody').empty();
-    console.log("added")
-    insert_course_not_yet_added(courses_used.filter(course => course.id !== Number(id_course)))
 
     var config_add_user = {
         method: "post",
@@ -415,6 +432,31 @@ $(document).on("click", ".insert_course_not_yet_added", function(){
 
 
 })
+
+$(document).on("click", ".insert_assignment_not_yet_added", function(){
+    let id_assignment = $(this).parents("tr")[0]["childNodes"][1].innerText
+
+
+    var config_add_user = {
+        method: "post",
+        url: `https://admin.simplebar.dk/api/assignment/${id_assignment}user/${used_user_id}`,
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+    };
+    axios(config_add_user).then(function (response) {
+        $('#table_assignment tbody').empty();
+        insert_assignment_not_yet_added(assignment_used.filter(assignment => assignment.id !== Number(id_assignment)))
+    }).catch(function (error){
+        if (error.response) {
+
+
+        }
+    })
+
+
+})
+
+
+
 $(document).on("click", ".get_nonadded_assignment", function() {
     $('#table_assignment tbody').empty();
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
@@ -438,12 +480,15 @@ $(document).on("click", ".get_nonadded_assignment", function() {
                 let participants = response.data["List of participants"]
                 for(let j = 0; j < participants.length; j++){
                     if (participants[j].id === Number(user_id)){
-                        console.log("yeahhh")
                         not_added_assignment.push(assignment[i])
-                        console.log(not_added_assignment)
                     }
                 }
                 //console.log(courses_objects)
+                if(i === assignment.length -1) {
+                    insert_assignment_not_yet_added(not_added_assignment)
+                    assignment_used = not_added_assignment
+                }
+
             }).catch(function (error){
                 if (error.response) {
                     console.log("failed to get participans")
@@ -452,8 +497,6 @@ $(document).on("click", ".get_nonadded_assignment", function() {
 
 
         }
-        console.log("ended")
-        insert_assignment(not_added_assignment)
 
     }).catch(function (error){
         if (error.response) {
