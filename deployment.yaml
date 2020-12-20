@@ -31,10 +31,3 @@ spec:
         image: dm874andreas/frontend-service:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: mntdatas3fs
-          mountPath: /public #Where the bucket is mounted in the container
-      volumes:
-      - name: mntdatas3fs
-        hostPath:
-          path: /mnt/s3data/descriptions   #The s3 daemon set munt location on host

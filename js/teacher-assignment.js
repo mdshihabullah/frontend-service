@@ -15,7 +15,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const email = response.data.user.email;
         const user_id = response.data.user.id;
         role = response.data.role[0];
-        let name_block = document.getElementById("username");
+        if (role == "teacher") {
+          let name_block = document.getElementById("username");
         name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -87,47 +88,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 }).then(() => {
                   window.location.replace("teacher-dashboard.html");
                 });
-                
-              //   const solution_id = result.solution_id;
-              //   const run_submission_end_point = "http://container.simplebar.dk/runsubmission";
-              //   Swal.fire({
-              //     icon: "success",
-              //     title: "Uploaded successfully!",
-              //     text: "Your solution is getting submitted.",
-              //     footer: "Please wait while automatic submission in progress...",
-              //   });
-              //   continueFetching();
-              //   function continueFetching() {
-                  
-              //     setTimeout(() => {
-              //       console.log("countinue fetching........")
-              //       $.ajax(
-              //         {
-              //           url: 'https://course.simplebar.dk/api/result',
-              //           type: "GET",
-              //           headers: {
-              //             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              //           },
-              //           data: { 
-              //             course_id: course_id, 
-              //             assignment_id: assign_id
-              //           },
-
-              //           success: function (result) {
-              //             if(result.Status == "Uploaded" || result.Status == "Testing started"){
-              //               continueFetching();
-              //             }else if(result.Status == "Completed"){
-              //               console.log("Fetching assignment result is successful", result)
-              //               document.getElementById("test-result-block").innerText= result.Result;
-              //             }
-                          
-              //           },
-              //   },
-              //   "json"
-              // );
-              //     }, 5000);
-                  
-              //   }
               },
               error: function (result) {
               console.log("Result", result);
@@ -137,6 +97,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
             "json"
           );
         });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "Only teachers are allowed."
+          }).then(()=>{
+            sessionStorage.removeItem("token");
+            window.location.replace("index.html");
+          });
+        }
+        
       })
       .catch(function (error) {
         if (error.response) {

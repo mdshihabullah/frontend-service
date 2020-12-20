@@ -12,66 +12,78 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const name = response.data.user.name;
         const email = response.data.user.email;
         const role = response.data.role[0];
-        let name_block = document.getElementById("username");
-        name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const title = urlParams.has("title") ? urlParams.get("title") : "";
-        console.log("Assignment_title: ", title);
-        const created_at = urlParams.has("created_at")
-          ? urlParams.get("created_at")
-          : "";
-        console.log("Assignment_title: ", typeof created_at);
-
-        //UPLOAD ASSIGNMENT
-        const uploadAssignmentForm = document.getElementById("make-assignment");
-        const inputPDFFile = document.getElementById("input-pdf-file");
-        //Check file size
-        console.log("inputPDFFile.files[0]", inputPDFFile.files[0])
-        this.validateFileSize("#input-pdf-file");
-        
-        uploadAssignmentForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const makeAssignmentData = new FormData();
-          let assignment_details={};
-          //Append solution zip file
-          makeAssignmentData.append("due_date", document.getElementById("due-date").value);
-          makeAssignmentData.append("title", document.getElementById("title").value);
-          makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
-          makeAssignmentData.append("description",inputPDFFile.files[0]);
-          const course_id = parseInt(document.getElementById("course_id").value);
-
-          //TODO
-          //call make assignment API
-          $.ajax({
-            url: `https://course.simplebar.dk/api/course/${course_id}/assignment`,
-            type: "POST",
-            data: makeAssignmentData,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-            processData: false,
-            contentType: false,
-            success: function (result) {
-              console.log("SUCESS OF MAKE ASSIGN API \n");
-              console.log(result);
-              assignment_details =result;
-              Swal.fire({
-                icon: "success",
-                title: "Done",
-                text: `Course named ${title} has been created successfully!`,
-                footer: "Click OK to go back to dashboard",
-              }).then(() => {
-                window.location.replace("teacher-dashboard.html");
-              });
-            },
-            error: function (result) {
-              console.log("FAILED MAKE ASSIGNMENT API CALL");
-            }
-          });
+        if (role == "teacher") {
+          let name_block = document.getElementById("username");
+          name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const title = urlParams.has("title") ? urlParams.get("title") : "";
+          console.log("Assignment_title: ", title);
+          const created_at = urlParams.has("created_at")
+            ? urlParams.get("created_at")
+            : "";
+          console.log("Assignment_title: ", typeof created_at);
   
+          //UPLOAD ASSIGNMENT
+          const uploadAssignmentForm = document.getElementById("make-assignment");
+          const inputPDFFile = document.getElementById("input-pdf-file");
+          //Check file size
+          console.log("inputPDFFile.files[0]", inputPDFFile.files[0])
+          this.validateFileSize("#input-pdf-file");
           
-        });
+          uploadAssignmentForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const makeAssignmentData = new FormData();
+            let assignment_details={};
+            //Append solution zip file
+            makeAssignmentData.append("due_date", document.getElementById("due-date").value);
+            makeAssignmentData.append("title", document.getElementById("title").value);
+            makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
+            makeAssignmentData.append("description",inputPDFFile.files[0]);
+            const course_id = parseInt(document.getElementById("course_id").value);
+  
+            //TODO
+            //call make assignment API
+            $.ajax({
+              url: `https://course.simplebar.dk/api/course/${course_id}/assignment`,
+              type: "POST",
+              data: makeAssignmentData,
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              },
+              processData: false,
+              contentType: false,
+              success: function (result) {
+                console.log("SUCESS OF MAKE ASSIGN API \n");
+                console.log(result);
+                assignment_details =result;
+                Swal.fire({
+                  icon: "success",
+                  title: "Done",
+                  text: `Course named ${title} has been created successfully!`,
+                  footer: "Click OK to go back to dashboard",
+                }).then(() => {
+                  window.location.replace("teacher-dashboard.html");
+                });
+              },
+              error: function (result) {
+                console.log("FAILED MAKE ASSIGNMENT API CALL");
+              }
+            });
+    
+            
+          });          
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "Only teachers are allowed."
+          }).then(()=>{
+            sessionStorage.removeItem("token");
+            window.location.replace("index.html");
+          });
+        }
+
       })
       .catch(function (error) {
         if (error.response) {
