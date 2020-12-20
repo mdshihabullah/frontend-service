@@ -25,28 +25,23 @@ window.addEventListener("DOMContentLoaded", (event) => {
           ? urlParams.get("created_at")
           : "";
         console.log("Assignment_title: ", typeof created_at);
-        
+
         const deadline = urlParams.has("deadline")
           ? urlParams.get("deadline")
           : "";
-          document.getElementById("deadline").innerText = `DEADLINE: ${deadline}`;
+        document.getElementById("deadline").innerText = `DEADLINE: ${deadline}`;
         console.log("Assignment Deadline: ", deadline);
 
-        pdf_link = urlParams.has("pdf_link")
-          ? urlParams.get("pdf_link")
-          : "";
+        pdf_link = urlParams.has("pdf_link") ? urlParams.get("pdf_link") : "";
         console.log("Assignment PDF LINK: ", pdf_link);
 
-        const assign_id = urlParams.has("id")
-          ? urlParams.get("id")
-          : "";
-          const course_id = urlParams.has("course_id")
+        const assign_id = urlParams.has("id") ? urlParams.get("id") : "";
+        const course_id = urlParams.has("course_id")
           ? urlParams.get("course_id")
           : "";
         console.log("Assignment ID: ", parseInt(assign_id));
         document.getElementById("assignment_id").value = assign_id;
         document.getElementById("pdf_link").src = pdf_link;
-        // document.getElementById("pdf_link").src = "http://www.africau.edu/images/default/sample.pdf";
         //Check file size
         this.validateFileSize();
         //UPLOAD ASSIGNMENT
@@ -59,11 +54,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
           const formData = new FormData();
           //Append solution zip file
           formData.append("solution", inputFile.files[0]);
-          
-          //Append assignmentID 
-          console.log("Assign_ID", document.getElementById("assignment_id").value)
 
-          formData.append("assignment_id", document.getElementById("assignment_id").value);
+          //Append assignmentID
+          console.log(
+            "Assign_ID",
+            document.getElementById("assignment_id").value
+          );
+
+          formData.append(
+            "assignment_id",
+            document.getElementById("assignment_id").value
+          );
           console.log("FormData", formData);
           console.log("Inputfile", inputFile.files[0]);
           console.log("Solution upload API called");
@@ -81,52 +82,61 @@ window.addEventListener("DOMContentLoaded", (event) => {
               success: function (result) {
                 console.log("Solution uploaded successfully", result);
                 const solution_id = result.solution_id;
-                const run_submission_end_point = "http://container.simplebar.dk/runsubmission";
+                const run_submission_end_point =
+                  "http://container.simplebar.dk/runsubmission";
                 Swal.fire({
                   icon: "success",
                   title: "Uploaded successfully!",
                   text: "Your solution is getting tested.",
-                  footer: "Please wait while automatic evaluation in progress...",
+                  footer:
+                    "Please wait while automatic evaluation in progress...",
                 });
                 continueFetching();
                 function continueFetching() {
-                  
                   setTimeout(() => {
-                    console.log("countinue fetching........")
+                    console.log("countinue fetching........");
                     $.ajax(
                       {
-                        url: 'https://course.simplebar.dk/api/result',
+                        url: "https://course.simplebar.dk/api/result",
                         type: "GET",
                         headers: {
-                          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                          Authorization: `Bearer ${sessionStorage.getItem(
+                            "token"
+                          )}`,
                         },
-                        data: { 
-                          course_id: course_id, 
-                          assignment_id: assign_id
+                        data: {
+                          course_id: course_id,
+                          assignment_id: assign_id,
                         },
 
                         success: function (result) {
-
-                          if(result.Status == "Uploaded" || result.Status == "Testing started"){
+                          if (
+                            result.Status == "Uploaded" ||
+                            result.Status == "Testing started"
+                          ) {
                             continueFetching();
-                          }else if(result.Status == "Completed"){
-                            console.log("Fetching assignment result is successful", result);
+                          } else if (result.Status == "Completed") {
+                            console.log(
+                              "Fetching assignment result is successful",
+                              result
+                            );
                             Swal.fire({
                               icon: "success",
                               title: "Evaluation completed!",
-                              text: "Your solution for the assignment is evaluated.",
-                              footer: "Please check below to see the test result...",
-                            }).then(()=>{
-                              document.getElementById("test-result-block").innerText= result.Result;
+                              text:
+                                "Your solution for the assignment is evaluated.",
+                              footer:
+                                "Please check below to see the test result...",
+                            }).then(() => {
+                              document.getElementById("test-result-label").style.display= "block";
+                              document.getElementById("test-result-block").innerText = result.Result;
                             });
                           }
-                          
                         },
-                },
-                "json"
-              );
+                      },
+                      "json"
+                    );
                   }, 5000);
-                  
                 }
               },
             },
@@ -154,8 +164,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 function validateFileSize() {
   $("#input-file").on("change", function () {
     const size = (this.files[0].size / 1024 / 1024).toFixed(2);
-    if (size <= 5) {
-      const extension = this.files[0].type.split('/')[1]
+    if (size <= 10) {
+      const extension = this.files[0].type.split("/")[1];
       if ("application/x-zip-compressed".indexOf(extension) == -1) {
         Swal.fire({
           icon: "error",
@@ -167,7 +177,7 @@ function validateFileSize() {
       }
       return true;
     } else {
-      $('#input-file').val('');
+      $("#input-file").val("");
       Swal.fire({
         icon: "error",
         title: "Too large file",
@@ -181,7 +191,7 @@ function validateFileSize() {
 //DOWNLOAD ASSIGNMENT
 $("#download-btn").on("click", function () {
   document.getElementById("download-btn").href = pdf_link;
-})
+});
 
 const logout = (event) => {
   event.preventDefault();
@@ -197,7 +207,3 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
-
-$('#logo-block').click(function(){
-  role == "student" ? window.location.replace("student-dashboard.html") : window.location.replace("teacher-dashboard.html");
-});

@@ -185,7 +185,3 @@ const logout = (event) => {
     window.location.replace("index.html");
   });
 };
-
-$('#logo-block').click(function(){
-  role == "student" ? window.location.replace("student-dashboard.html") : window.location.replace("teacher-dashboard.html");
-});

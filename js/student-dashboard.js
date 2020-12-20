@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     let created_at = Date.parse(assignment.created_at);
                     console.log("assign created at",created_at);
                     let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-                    let deadline = new Date(assignment.due_date).toDateString();
+                    let deadline = assignment.due_date ? new Date(assignment.due_date).toDateString() : "TBA";
                     let assignment_desc = assignment.description;
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
@@ -101,7 +101,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     let created_at = Date.parse(assignment.created_at);
                     console.log("assign created at",created_at);
                     let daysDifference = Math.floor( (Date.now() - created_at) / 1000 / 60 / 60 / 24);
-                    let deadline = new Date(assignment.due_date).toDateString();
+                    let deadline = assignment.due_date ? new Date(assignment.due_date).toDateString() : "TBA";
                     let assignment_desc = assignment.description;
                     
                     list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">

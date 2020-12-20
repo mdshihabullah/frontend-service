@@ -40,8 +40,7 @@
 
             <div id="logo-block" class="logo-container" style="margin-top: 5px;">
                 <img class="header-logo" src="img/logo.png" alt="logo" />
-                <h3 class="logo">Auto<span>Grader</span></h3>
-            </div>
+                <a href="./student-dashboard.html"><h3 class="logo">Auto<span>Grader</span></h3></a>            </div>
 
             <div class="nav-btn">
                 <div class="nav-links" style="display: none;">
@@ -99,40 +98,8 @@
                                         <input type="hidden" value="1" name="solution" id="assignment_id">
                                         <button type="submit" class="btn btn-success"> Upload </button>
                                     </form>   
-                                    <h3 class="pt-3 text-dark">Test Result</h3>
+                                    <h3 id="test-result-label" class="d-none pt-3 text-dark">Test Result</h3>
                                     <p id="test-result-block" class="text-justify pr-3 text-dark custom-scrollbar">
-                                        A company has 4 shops distributed in a city. There are two types of duties,
-                                        daytime duties and nighttime duties. A daytime duty is characterized by an
-                                        interval of an arbitrary range (within 7:00 and 20:00), a location (of the 4
-                                        shops), a skill that a worker should have. A time interval is composed by time
-                                        slots where a slot corresponds to one hour. A nighttime duty has a fixed
-                                        interval (from 20:00-6:00) which cannot be split, a location, but no specific
-                                        skills are required (any workers can cover it). Hence, a nighttime duty is also
-                                        called a nighttime shift. A worker typically starts a nighttime shift at 20:00
-                                        without having done any daytime shifts before or he/she can go on a nighttime
-                                        shift if his/her last shift of a day ends at 20:00 and then continues during the
-                                        night. </br> In fact, during a nighttime shift, a worker can sleep, thus he/she
-                                        can work longer than 10 hours. Each duty requires that at least one worker is
-                                        covering it at any time during its extent. However, a duty with long duration
-                                        can be split and covered by different workers. Each part of a split duty is
-                                        called shift. A duty that is declared fixed cannot be split and constitutes a
-                                        shift on its own. Hence, shifts are continuous intervals of working time, or
-                                        sequences of consecutive slots of work. A nighttime duty has a fixed interval
-                                        (from 20:00-6:00) which cannot be split, a location, but no specific skills are
-                                        required (any workers can cover it). Hence, a nighttime duty is also called a
-                                        nighttime shift. A worker typically starts a nighttime shift at 20:00 without
-                                        having done any daytime shifts before or he/she can go on a nighttime shift if
-                                        his/her last shift of a day ends at 20:00 and then continues during the night.
-                                        In fact, during a nighttime shift, a worker can sleep, thus he/she can work
-                                        longer than 10 hours. If a worker has done a nighttime shift, then the day
-                                        after, he/she cannot do any daytime shift.A nighttime duty has a fixed interval
-                                        (from 20:00-6:00) which cannot be split, a location, but no specific skills are
-                                        required (any workers can cover it). Hence, a nighttime duty is also called a
-                                        nighttime shift. A worker typically starts a nighttime shift at 20:00 without
-                                        having done any daytime shifts before or he/she can go on a nighttime shift if
-                                        his/her last shift of a day ends at 20:00 and then continues during the night.
-                                        In fact, during a nighttime shift, a worker can sleep, thus he/she can work
-                                        longer than 10 hours.
                                     </p>
                                 </div>
                             </div>
