@@ -3,6 +3,7 @@ let used_user_id;
 let courses_used;
 let assignment_used;
 let course_id_used;
+let role = "All"
 window.addEventListener("DOMContentLoaded", (event) => {
     if (sessionStorage.getItem("token")) {
         var config = {
@@ -86,7 +87,7 @@ function logs (){
 
 
 
-function insertdataintotable(array_of_user_object, role){
+function insertdataintotable(array_of_user_object){
     let table = document.getElementById("table").getElementsByTagName('tbody')[0];
 
     for (let i = 0; i < array_of_user_object.length; i++){
@@ -120,21 +121,25 @@ function insert_data(table, array_of_user_object, i){
 
 function get_students(){
     remove_content_from_table()
-    insertdataintotable(user_objects, "student" )
+    role = "student"
+    insertdataintotable(user_objects )
 }
 function get_teacher(){
     remove_content_from_table()
-    insertdataintotable(user_objects, "teacher" )
+    role = "teacher"
+    insertdataintotable(user_objects)
 }
 
 function get_admin(){
     remove_content_from_table()
-    insertdataintotable(user_objects, "admin" )
+    role = "admin"
+    insertdataintotable(user_objects)
 }
 
 function get_all(){
     remove_content_from_table()
-    insertdataintotable(user_objects, "All" );
+    role = "All"
+    insertdataintotable(user_objects);
 
 
 
@@ -271,8 +276,9 @@ $(document).on("click", ".delete", function(){
             };
             axios(config_user_delete).then(function (response) {
                 console.log(response.data);
-                $(this).parents("tr").remove()
+                $('#table_users tbody').empty();
                 deleterow(email_of_person)
+                insertdataintotable(user_objects)
 
             }).catch(function (error){
                 if (error.response) {

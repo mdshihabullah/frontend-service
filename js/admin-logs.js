@@ -53,7 +53,7 @@ const logout = (event) => {
     });
 };
 
-function database(){
+function users(){
     window.location.replace("admin-dashboard.html");
 }
 
@@ -74,6 +74,7 @@ function insertlogs(){
     axios(config)
         .then(function (response) {
             let table = document.getElementById("table").getElementsByTagName('tbody')[0];
+            console.log(response.data["logs"].length)
             for (let i = 0; i < response.data["logs"].length; i++){
                 let individual_log = response.data["logs"][i]
                 let row = table.insertRow(0);
@@ -93,9 +94,6 @@ function insertlogs(){
                 deleted_at.innerHTML = individual_log["deleted_at"]
 
 
-                if(i > 40){
-                    break
-                }
             }
             logs_container.innerHTML = stringcontent
             //let name_block = document.getElementById("username");

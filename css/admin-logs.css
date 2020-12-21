@@ -502,3 +502,44 @@ section {
     transform: translateY(15px);
   }
 }
+
+.container_table{
+  overflow: hidden;
+}
+
+table{
+  table-layout: fixed;
+  width: 100px;
+}
+
+
+table td{
+  overflow: hidden;
+}
+
+.row-ID {
+  width: 4%;
+}
+
+.row-deleted_at{
+  width: 5%
+}
+
+.row-Actions{
+  width: 7%;
+}
+
+.row-ip_address{
+  width: 7%;
+}
+
+.row-created_at{
+  width: 9%;
+}
+.row-updated_at{
+  width: 9%;
+}
+
+.row-logs{
+  width:31%;
+}

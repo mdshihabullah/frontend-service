@@ -14,7 +14,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/admin-logs.css">
     <link rel="stylesheet" href="css/loader.css">
     <title>DM874 - Autograder</title>
 </head>
@@ -160,8 +160,8 @@
             </div>
             <div id="username">Hi</div>
             <div class="log-sign" style="--i: 1.8s">
-                <button class="btn btn-success" onclick="database()"> Users </button>
-                <button class="btn btn-info" onclick="database()"> Courses </button>
+                <button class="btn btn-success" onclick="users()"> Users </button>
+                <button class="btn btn-info" onclick="courses()"> Courses </button>
                 <!-- <a href="index.html" class="btn solid">Sign up</a> -->
             </div>
             <div class="log-sign" style="--i: 1.8s">
@@ -178,7 +178,7 @@
     </div>
 </header>
 
-<div class="container">
+    <div class = "container_table">
 
     <div class="table-wrapper" style="margin-left: 50px; margin-top: 5px">
         <div class="table-title">
@@ -191,13 +191,13 @@
         <table class="table table-bordered" style="margin-top: 48px" id="table">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Actions</th>
-                <th>ip_address</th>
-                <th>logs</th>
-                <th>created_at</th>
-                <th>updated_at</th>
-                <th>deleted_at</th>
+                <th class="row-1 row-ID">ID</th>
+                <th class="row-2 row-Actions">Actions</th>
+                <th class="row-3 row-ip_address">ip_address</th>
+                <th class="row-4 row-logs">logs</th>
+                <th class="row-5 row-created_at">created_at</th>
+                <th class="row-6 row-updated_at">updated_at</th>
+                <th class="row-7 row-deleted_at">deleted_at</th>
 
             </tr>
             </thead>
@@ -207,9 +207,8 @@
             </tbody>
         </table>
     </div>
+    </div>
 
-
-</div>
 
 
 
