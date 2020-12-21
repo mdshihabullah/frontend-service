@@ -2,7 +2,7 @@ const myForm = document.getElementById("generate-code-form");
 
 myForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const endPoint = "https://login.simplebar.dk/api/register";
+  const endPoint = "https://login.simplebar.dk/api/join";
   const formData = new FormData();
   formData.append("name", document.getElementById("name").value);
   formData.append("email", document.getElementById("email").value);
