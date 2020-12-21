@@ -3,6 +3,7 @@ let course_id_used;
 let users_used = []
 let where_user_came_from;
 let assignment_id_used;
+let all_users = [];
 window.addEventListener("DOMContentLoaded", (event) => {
     if (sessionStorage.getItem("token")) {
         var config = {
@@ -42,7 +43,27 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     //courses_objects.push(courses_objects[0])
 
                     get_all()
-
+                    let config_get_user_list = {
+                        method: "get",
+                        url: `https://admin.simplebar.dk/api/user_list`,
+                        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+                    }
+                    axios(config_get_user_list).then(function (response) {
+                        for (let i = 0; i< response.data["list"].length; i++){
+                            let user = response.data["list"][i]
+                            all_users.push({
+                                id:user["id"],
+                                role: user["role"],
+                                name: user["name"],
+                                email: user["email"]
+                            })
+                        }
+                        //console.log(user_object
+                    }).catch(function (error){
+                        if (error.response) {
+                            console.log("failed to get users")
+                        }
+                    })
                     //console.log(courses_objects)
 
                 }).catch(function (error){
@@ -144,17 +165,29 @@ function insertassignmentintotable(course){
 
 function insertusersintotable(users){
     let table = document.getElementById("table_users").getElementsByTagName('tbody')[0];
+
     users_used = users
     for (let i = 0; i < users.length; i++){
-        let row = table.insertRow(i);
-        let name_cell = row.insertCell(0);
-        let email_cell = row.insertCell(1);
-        let role_cell = row.insertCell(2);
-        let action_cell = row.insertCell(3)
-        name_cell.innerHTML = users[i]['name']
-        email_cell.innerHTML = users[i]['email']
-        role_cell.innerHTML = users[i]['role']
-        action_cell.innerHTML = "<a class = 'delete_users'><i   class='fas fa-trash'></i></a>"
+        for (let j = 0; j < all_users.length; j++){
+
+            if(users[i].email === all_users[j]["email"]){
+                let row = table.insertRow(i);
+                let name_cell = row.insertCell(0);
+                let email_cell = row.insertCell(1);
+                let role_cell = row.insertCell(2);
+                let action_cell = row.insertCell(3)
+                name_cell.innerHTML = users[i]['name']
+                email_cell.innerHTML = users[i]['email']
+                let role_of_person = all_users[j]["role"][0]
+                role_cell.innerHTML = all_users[j]["role"]
+                if (role_of_person === "student"){
+                action_cell.innerHTML =  "<a class = 'delete_users'><i   class='fas fa-trash'></i></a>"
+
+                }
+            }
+        }
+
+
     }
 }
 
@@ -322,14 +355,13 @@ $(document).on("click", ".delete_users", function(){
         if (result.isConfirmed) {
             let email = $(this).parents("tr")[0]["childNodes"][1].innerHTML
             let user_id = findid(email)
-            console.log("yeah")
+
             if (where_user_came_from === "course"){
                 let config_user_delete = {
                     method: "DELETE",
-                    url: `https://admin.simplebar.dk/api/remove_student_course/course_id/${course_id_used}/student_id/${user_id}`,
+                    url: `https://course.simplebar.dk/api/course/${course_id_used}/student/${user_id}`,
                     headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
                 };
-                console.log(config_user_delete.url)
 
                 axios(config_user_delete).then(function (response) {
                     remove_user_from_table(email)
@@ -344,10 +376,9 @@ $(document).on("click", ".delete_users", function(){
             if(where_user_came_from === "assignment"){
                 let config_user_delete = {
                     method: "DELETE",
-                    url: `https://admin.simplebar.dk/api/remove_student_assignment/assignment_id=${assignment_id_used}&student_id=${user_id}`,
+                    url: `https://course.simplebar.dk/api/assignment/${assignment_id_used}/student/${user_id}`,
                     headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
                 };
-                console.log(config_user_delete.url)
                 axios(config_user_delete).then(function (response) {
                     remove_user_from_table(email)
                     $('#table_users tbody').empty();
@@ -375,7 +406,7 @@ $(document).on("click", ".user_course", function(){
     $('#table_users tbody').empty();
     let course_name = $(this).parents("tr")[0]["childNodes"][0].innerText
     let id = $(this).parents("tr")[0]["childNodes"][1].innerText
-    console.log(id)
+    console.log(course_name, id)
     var config_get_users = {
         method: "get",
         url: `https://course.simplebar.dk/api/course/${id}`,
@@ -383,10 +414,11 @@ $(document).on("click", ".user_course", function(){
     };
     axios(config_get_users).then(function (response) {
         let participants = response.data["List of participants"]
+        console.log(participants)
         insertusersintotable(participants)
         document.getElementById("users").innerHTML = "<h2> Users <b>in </b> " + course_name + " </h2></div>";
-
-
+        course_id_used = id
+        console.log("why")
         //console.log(courses_objects)
     }).catch(function (error){
         if (error.response) {
@@ -397,6 +429,7 @@ $(document).on("click", ".user_course", function(){
 })
 
 $(document).on("click", ".user_assignment", function(){
+    let title = $(this).parents("tr")[0]["childNodes"][0].innerText
     let id = $(this).parents("tr")[0]["childNodes"][1].innerText
     assignment_id_used = id
     where_user_came_from = "assignment"
@@ -409,8 +442,10 @@ $(document).on("click", ".user_assignment", function(){
     };
     axios(config_get_users).then(function (response) {
         let participants = response.data["List of participants"]
+        console.log(participants)
         insertusersintotable(participants)
-        document.getElementById("users").innerHTML = "<h2> Users <b> in </b> " + course_name + " </h2></div>";
+        document.getElementById("users").innerHTML = "<h2> Users <b> in </b> " + title + " </h2></div>";
+        document.getElementById("users").innerHTML = "<h2> Users <b> in </b> " + title + " </h2></div>";
         //console.log(courses_objects)
     }).catch(function (error){
         if (error.response) {
@@ -424,28 +459,13 @@ $(document).on("click", ".add_user_course", function() {
     $('#table_users tbody').empty();
     let course_name = $(this).parents("tr")[0]["childNodes"][0].innerText
     let course_id = $(this).parents("tr")[0]["childNodes"][1].innerText
-    let config_get_user_list = {
-        method: "get",
-        url: `https://admin.simplebar.dk/api/user_list`,
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-    }
-    axios(config_get_user_list).then(function (response) {
-        all_users = []
-        for (let i = 0; i< response.data["list"].length; i++){
-            let user = response.data["list"][i]
-            if(!user["role"].includes("student")) continue
-            all_users.push({
-                id:user["id"],
-                role: user["role"],
-                name: user["name"],
-                email: user["email"]
-            })
-        }
+
         var config_get_users = {
             method: "get",
             url: `https://course.simplebar.dk/api/course/${course_id}`,
             headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
         };
+
         axios(config_get_users).then(function (response) {
             let participants = response.data["List of participants"]
             let user_that_can_be_added = []
@@ -458,21 +478,17 @@ $(document).on("click", ".add_user_course", function() {
                 }
                 if(!check) user_that_can_be_added.push(all_users[i])
             }
-            insertpontialusersintotable_course(user_that_can_be_added)
             users_used = user_that_can_be_added
             course_id_used = course_id
             document.getElementById("users").innerHTML = "<h2> Users <b>Not in </b> " + course_name + " </h2></div>";
+            insertpontialusersintotable_course(user_that_can_be_added)
+
         }).catch(function (error){
             if (error.response) {
                 console.log("failed to get participans")
             }
         })
 
-    }).catch(function (error){
-        if (error.response) {
-            console.log("failed to get users")
-        }
-    })
 
 
 })

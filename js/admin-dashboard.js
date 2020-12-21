@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         text: "Your session has expired",
                         footer: "Please try to login again.",
                     });
-                window.location("index.html")
+                window.location.replace("index.html")
                 }
             });
     } else {
@@ -169,6 +169,7 @@ function insert_assignment_not_yet_added(assignment){
 
 function insert_assignment(assignment){
     let table = document.getElementById("table_assignment").getElementsByTagName('tbody')[0];
+    if (assignment == null) return
     for (let i= 0; i < assignment.length; i++){
         let row = table.insertRow(0);
         let name_cell = row.insertCell(0);
@@ -241,7 +242,7 @@ $(document).on("click", ".get_details", function(){
 $(document).on("click", ".get_assignments", function(){
     $('#table_assignment tbody').empty();
     let course_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
-  
+
     for (let i = 0; i < courses_used.length; i++){
         let course = courses_used[i]
         if (course.id === Number(course_id)){
@@ -304,7 +305,7 @@ $(document).on("click", ".delete_course", function() {
             let course_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
             let config_user_delete = {
                 method: "DELETE",
-                url: `https://course.simplebar.dk/api/course/${course_id}`,
+                url: `https://course.simplebar.dk/api/course/${course_id}/student/${used_user_id}`,
                 headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
             };
             axios(config_user_delete).then(function (response) {
@@ -314,7 +315,7 @@ $(document).on("click", ".delete_course", function() {
 
             }).catch(function (error){
                 if (error.response) {
-                    console.log("failed to course")
+                    console.log("failed to delete course")
                 }
             })
 
@@ -338,8 +339,9 @@ $(document).on("click", ".delete_assignment", function() {
 
 
             let config_user_delete = {
-                method: "DELETE",
-                url: `https://course.simplebar.dk/api/course/${course_id_used}/assignment/${assignment_id}`,
+                    method: "DELETE",
+                    url: `https://course.simplebar.dk/api/assignment/${assignment_id}/student/${used_user_id}`,
+
                 headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
             };
             axios(config_user_delete).then(function (response) {
@@ -349,7 +351,7 @@ $(document).on("click", ".delete_assignment", function() {
 
             }).catch(function (error){
                 if (error.response) {
-                    console.log("failed to course")
+                    console.log("failed to delete assignment")
                 }
             })
 
@@ -393,13 +395,13 @@ $(document).on("click", ".get_nonadded_course", function(){
                 let check = false
 
                 for (j= 0; j < user_courses.length; j++){
-                    if (user_courses[j].id === all_courses[i].id) check = true
+                    if (user_courses[j].id === all_courses[i].id ) check = true
                 }
                 if (!check) availbe_courses.push(all_courses[i])
             }
+            used_user_id = id
             courses_used = availbe_courses
             insert_course_not_yet_added(availbe_courses)
-            used_user_id = id
         }).catch(function (error){
             if (error.response) {
                 console.log("failed to get courses")
@@ -419,16 +421,15 @@ $(document).on("click", ".get_nonadded_course", function(){
 
 $(document).on("click", ".insert_course_not_yet_added", function(){
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
-    let user_id = used_user_id
-
     var config_add_user = {
         method: "post",
-        url: `https://admin.simplebar.dk/api/course/${id_course}/user/${user_id}`,
+        url: `https://admin.simplebar.dk/api/course/${id_course}/user/${used_user_id}`,
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     };
     axios(config_add_user).then(function (response) {
         $('#table_course tbody').empty();
-        insert_course_not_yet_added(courses_used.filter(course => course.id !== Number(id_course)))
+        courses_used = courses_used.filter(course => course.id !== Number(id_course))
+        insert_course_not_yet_added(courses_used)
     }).catch(function (error){
         if (error.response) {
 
@@ -445,7 +446,7 @@ $(document).on("click", ".insert_assignment_not_yet_added", function(){
 
     var config_add_user = {
         method: "post",
-        url: `https://admin.simplebar.dk/api/assignment/${id_assignment}user/${used_user_id}`,
+        url: `https://admin.simplebar.dk/api/assignment/${id_assignment}/user/${used_user_id}`,
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     };
     axios(config_add_user).then(function (response) {
@@ -474,6 +475,32 @@ $(document).on("click", ".get_nonadded_assignment", function() {
     };
     axios(config_user_assignment).then(function (response) {
         let assignment = response.data["courses"].filter(course => course.id === Number(id_course))[0]["assignments"]
+        if(assignment == null) return
+
+        for (let i = 0; i < courses_used.length; i++){
+            let course = courses_used[i]
+            if (course.id === Number(id_course)){
+                assignment_used = course["assignments"]
+                course_id_used = id_course
+                break
+            }
+
+        }
+        let availbe_courses = []
+        for(let i = 0; i < assignment.length; i++){
+            let check = true
+            for (let j = 0; j < assignment_used.length; j++){
+                if(assignment[i].id === assignment_used[j].id) check = false
+            }
+            if(check)availbe_courses.push(assignment[i])
+        }
+        assignment_used = availbe_courses
+        insert_assignment_not_yet_added(availbe_courses)
+        /*
+        let users_assignment = courses_used.filter(course => course.id === Number(id_course))["assignments"]
+        if(users_assignment == null) users_assignment = []
+        console.log(users_assignment)
+        /*
         let not_added_assignment = []
         for(let i=0; i<assignment.length; i++){
             let assignment_id = assignment[i].id
@@ -503,6 +530,8 @@ $(document).on("click", ".get_nonadded_assignment", function() {
 
 
         }
+
+         */
 
     }).catch(function (error){
         if (error.response) {
