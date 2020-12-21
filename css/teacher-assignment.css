@@ -51,7 +51,17 @@ section {
   display: flex;
   position: relative;
 }
-
+.loadingio-spinner-spinner-hqnakeojhrn {
+  width: 70px;
+  height: 70px;
+  margin-left: 73%;
+  margin-top: 13.5%;
+  display: none;
+  overflow: hidden;
+  background: none;
+  position: absolute;
+  z-index: 1;
+}
 .logo-container {
   flex: 1;
   display: flex;

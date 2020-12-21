@@ -265,32 +265,6 @@ const fetchAllSolutions = (assign_id, assign_title) => {
   console.log("assign_id", assign_id);
   document.getElementById("solution-block").src=`./solutions-of-assignment.html?id=${assign_id}`;
   document.getElementById("exampleModalLongTitle").innerText = assign_title;
-  
-  const fetch_all_solutions_end_point =
-    "https://course.simplebar.dk/api/fetch_bulk";
-  $.ajax(
-    {
-      url: fetch_all_solutions_end_point,
-      type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-      data: {
-        assignment_id: assign_id
-      },
-
-      success: function (result) {
-        console.log("Fetching assignment result is successful", result);
-        // Swal.fire({
-        //   icon: "success",
-        //   title: "All results are Fetched Published!",
-        //   text: `See your test result in sectioned name "Test Result"`,
-        // });
-        
-      },
-    },
-    "json"
-  );
 };
 
 const showCourseUsers = (course_id) => {

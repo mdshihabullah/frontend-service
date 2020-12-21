@@ -68,6 +68,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           console.log("FormData", formData);
           console.log("Inputfile", inputFile.files[0]);
           console.log("Docker upload API called");
+          document.getElementById("loader").style.display = "inline-block";
           $.ajax(
             {
               url: endPoint,
@@ -81,6 +82,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
               processData: false,
               success: function (result) {
                 console.log("Docker file has been uploaded successfully", result);
+                document.getElementById("loader").style.display = "none";
                 Swal.fire({
                   icon: "success",
                   title: "Upload Successful!",
@@ -91,7 +93,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
               },
               error: function (result) {
               console.log("Result", result);
-                
+              document.getElementById("loader").style.display = "none";
+              Swal.fire({
+                icon: "error",
+                title: "Docker file upload failed",
+                text: "Please contact technical support or administrator."
+              });
               }
             },
             "json"

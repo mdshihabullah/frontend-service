@@ -26,7 +26,7 @@ myForm.addEventListener("submit", (e) => {
           title: `You have enrolled in the course or assignment successfully`,
           text: `Please sign in with the credentials to access the course and assignment`,
         }).then(() => {
-          window.location.replace("teacher-dashboard.html");
+          window.location.replace("./index.html");
         });
       },
       error: function (result) {

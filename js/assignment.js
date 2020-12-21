@@ -50,6 +50,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         myForm.addEventListener("submit", (e) => {
           e.preventDefault();
+          document.getElementById("loader").style.display = "inline-block";  
           const endPoint = "https://upload.simplebar.dk/api/solution";
           const formData = new FormData();
           //Append solution zip file
@@ -81,17 +82,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
               processData: false,
               success: function (result) {
                 console.log("Solution uploaded successfully", result);
-                const solution_id = result.solution_id;
-                const run_submission_end_point =
-                  "http://container.simplebar.dk/runsubmission";
+                document.getElementById("loader").style.display = "none";  
                 Swal.fire({
                   icon: "success",
-                  title: "Uploaded successfully!",
-                  text: "Your solution is getting tested.",
+                  title: "Solution uploaded successfully!",
+                  text:
+                    "Please wait after clicking 'OK' button",
                   footer:
-                    "Please wait while automatic evaluation in progress...",
-                });
-                continueFetching();
+                    "Test files will run your solution",
+                }).then(() =>{
+                  document.getElementById("loader").style.display = "inline-block";                          
+                  continueFetching();
+                })
+
                 function continueFetching() {
                   setTimeout(() => {
                     console.log("countinue fetching........");
@@ -110,12 +113,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         },
 
                         success: function (result) {
-                          if (
-                            result.Status == "Uploaded" ||
-                            result.Status == "Testing started"
-                          ) {
-                            continueFetching();
-                          } else if (result.Status == "Completed") {
+                        
+                           if (result.Status == "Completed") {
                             console.log(
                               "Fetching assignment result is successful",
                               result
@@ -126,17 +125,90 @@ window.addEventListener("DOMContentLoaded", (event) => {
                               text:
                                 "Your solution for the assignment is evaluated.",
                               footer:
-                                "Please check below to see the test result...",
+                                "Click 'OK' to see the test result :)",
                             }).then(() => {
+                              document.getElementById("loader").style.display = "none";
                               document.getElementById("test-result-label").style.display= "block";
                               document.getElementById("test-result-block").innerText = result.Result;
+                            });
+                          }
+                          else if (result.Status == "Testing failed") {
+                            console.log(
+                              "Testing failed",
+                              result
+                            );
+                            Swal.fire({
+                              icon: "error",
+                              title: "Testing has failed!",
+                              text:
+                                "Please contact your teacher."
+                            }).then(() => {
+                              document.getElementById("loader").style.display = "none";
+                              document.getElementById("test-result-label").style.display= "block";
+                              document.getElementById("test-result-block").innerText = result.Result;
+                              window.location.replace(window.location.href);
+                            });
+                          }
+                          else if (result.Status == "Time limit reached") {
+                            console.log(
+                              "Time limit reached",
+                              result
+                            );
+                            Swal.fire({
+                              icon: "error",
+                              title: "Time limit reached for running test!",
+                              text:
+                                "Your solution took more than the timit limit of 15 minutes"
+                            }).then(() => {
+                              document.getElementById("loader").style.display = "none";
+                              document.getElementById("test-result-label").style.display= "block";
+                              document.getElementById("test-result-block").innerText = result.Result;
+                              window.location.replace(window.location.href);
+
+                            });
+                          }
+                          else if (result.Status == "No output generated") {
+                            console.log(
+                              "No output generated",
+                              result
+                            );
+                            Swal.fire({
+                              icon: "info",
+                              title: "No output generated",
+                              text:
+                                "The test completed, but no output was generated. Please contact your teacher for troubleshooting"
+                            }).then(() => {
+                              document.getElementById("loader").style.display = "none";
+                              document.getElementById("test-result-label").style.display= "inline-block";
+                              document.getElementById("test-result-block").innerText = result.Result;
+                              window.location.replace(window.location.href);
+
+                            });
+                          }
+                          else{
+                            continueFetching();
+                          }
+                        },
+                        error: function (result) {
+                          console.log("Result", result);
+                          if (result.status === 422) {
+                            Swal.fire({
+                              icon: "error",
+                              title: "Download Error!",
+                              text: `${result.responseJSON.message}`,
+                            });
+                          } else {
+                            Swal.fire({
+                              icon: "error",
+                              title: "Download Error!",
+                              text: `${result.responseJSON.message}`,
                             });
                           }
                         },
                       },
                       "json"
                     );
-                  }, 5000);
+                  }, 2000);
                 }
               },
             },
