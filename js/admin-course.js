@@ -13,11 +13,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
         };
         axios(config)
             .then(function (response) {
-                //console.log(response.data);
-                document.getElementById("loader").style.display = "none";
+                console.log(response.data);
                 const name = response.data.user.name;
                 const email = response.data.user.email;
                 const role = response.data.role[0];
+                let name_block = document.getElementById("username");
+                name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue; white-space: nowrap;"> ${name}!</a>`;
+        
                 if (role !== "admin"){
                     window.location.replace("index.html")
                 }

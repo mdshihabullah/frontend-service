@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         role = response.data.role[0];
         if (role == "teacher") {
           let name_block = document.getElementById("username");
-          name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+          name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; white-space: nowrap; color: deepskyblue;"> ${name}!</a>`;
           const queryString = window.location.search;
           const urlParams = new URLSearchParams(queryString);
           const title = urlParams.has("title") ? urlParams.get("title") : "";

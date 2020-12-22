@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const email = response.data.user.email;
         const role = response.data.role[0];
         let name_block = document.getElementById("username");
-        name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; color: deepskyblue;"> ${name}!</a>`;
+        name_block.innerHTML = `Hi,&nbsp;<a href="#" title="${email}" style="text-decoration: none; white-space: nowrap; color: deepskyblue;"> ${name}!</a>`;
         if(role == "student"){
           
         config = {
