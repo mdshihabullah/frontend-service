@@ -69,8 +69,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             </a>`;
                 }
               }
-              list_tab.innerHTML += `<a href="upload-course.html" id="upload-course" class="mt-5 btn btn-success"><i class="fas fa-plus-circle pr-2"></i>New Course</a>`;
-
               let list_tab_html_content = "";
 
               for (let index = 0; index < assignment_list.length; index++) {
