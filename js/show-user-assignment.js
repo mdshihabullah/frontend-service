@@ -41,7 +41,7 @@ $(document).ready(function () {
     var result = confirm(`Are you sure you want to delete user named: ${$(this).closest('tr').find('td:eq(1)').text()} ?`);
 
     if (result) {
-      const user_id = document.querySelector('.delete').id;
+      const user_id = $(this).closest('tr').find('td:eq(0)').text();
       console.log("User_id", user_id)
       $.ajax({
           url:`https://course.simplebar.dk/api/assignment/${assign_id}/student/${user_id}`,
@@ -64,6 +64,7 @@ $(document).ready(function () {
             }).then(() => {
               $(this).parents("tr").remove();
               $(".add-new").removeAttr("disabled");
+              window.location.replace(window.location.href);
             });
           },
           error: function (result) {

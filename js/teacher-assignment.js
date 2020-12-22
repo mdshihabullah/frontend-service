@@ -45,9 +45,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           console.log("Assignment ID: ", parseInt(assign_id));
           document.getElementById("assignment_id").value = assign_id;
           document.getElementById("pdf_link").src = pdf_link;
-          document.getElementById(
-            "assignment-user"
-          ).src = `./show-user-assignment.html?id=${assign_id}`;
+          document.getElementById("assignment-user").src = `./show-user-assignment.html?id=${assign_id}`;
           //Check file size
           this.validateFileSize("#input-docker-file");
           //UPLOAD ASSIGNMENT
@@ -182,8 +180,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
                           },
 
                           success: function (result) {
-                            const solutionHTML = "";
-                            document.getElementById("test-result-block").innerHTML="";
+                            let solutionHTML = "";
+                            document.getElementById("test-result-block").innerHTML = `<iframe id="assignment-user" scrolling="yes" frameborder="0" marginwidth="0" marginheight="0" style="width:100%;height:700px;"></iframe>`
+                            document.getElementById("assignment-user").src = `./show-user-assignment.html?id=${assign_id}`;
                             if (result.Status == "Completed") {
                               console.log(
                                 "Fetching assignment result is successful",
