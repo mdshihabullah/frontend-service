@@ -17,6 +17,7 @@
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link rel="stylesheet" href="css/upload-assignment.css">
     <link rel="stylesheet" href="css/loader.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     <title>DM874 - Autograder</title>
 </head>
 
@@ -86,7 +87,9 @@
                                             <div class="form-group row">
                                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Course</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="course" id="course_id" placeholder="Course ID" >
+                                                    <div class="mb-3 mt-3">
+                                                        <select id="course_id" name="course" class="form-control select2"></select>
+                                                    </div>
                                                 </div>
                                               </div>
                                               <div class="form-group row">
@@ -98,9 +101,15 @@
                                               <div class="form-group row">
                                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Due date</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="course" id="due-date" placeholder="Deadline in DD-MM-YYY format" >
+                                                    <input type="date" class="form-control" name="course" id="due-date">
                                                 </div>
                                               </div>
+                                              <div class="form-group row">
+                                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Timeout</label>
+                                                  <div class="col-sm-10">
+                                                    <input type="number" class="form-control" min="0" name="timeout" id="timeout" placeholder="Time limit for solution runtime (in seconds)">
+                                                  </div>
+                                                </div>
                                               <div class="form-group row">
                                                 <label for="inputEmail3" class="pt-3 col-2 col-form-label"> Assignment Type</label>
                                                 <div class="col-sm-10">
@@ -149,6 +158,33 @@
         crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="js/upload-assignment.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
+    <script>
+      config = {
+        method: "get",
+        url: `https://course.simplebar.dk/api/me`,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+
+      axios(config)
+        .then(function (response) {
+
+            let courses = [];
+
+            $.each(response['data']['courses'], function( index, course ) {
+
+                courses.push({'id': course['id'], 'text': course['title']});
+            });
+
+            $('#course_id').select2({
+              data: courses
+            });
+
+        });
+    </script>
     
 </body>
 
