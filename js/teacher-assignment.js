@@ -96,8 +96,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     icon: "success",
                     title: "Upload Successful!",
                     text: "The docker file has been uploaded to the server",
-                  }).then(() => {
-                    window.location.replace("teacher-dashboard.html");
                   });
                 },
                 error: function (result) {
@@ -184,6 +182,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                           },
 
                           success: function (result) {
+                            const solutionHTML = "";
+                            document.getElementById("test-result-block").innerHTML="";
                             if (result.Status == "Completed") {
                               console.log(
                                 "Fetching assignment result is successful",
@@ -196,19 +196,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
                                   "Your solution for the assignment is evaluated.",
                                 footer: "Click 'OK' to see the test result :)",
                               }).then(() => {
-                                document.getElementById(
-                                  "loader"
-                                ).style.display = "none";
-                                document.getElementById(
-                                  "test-result-label"
-                                ).style.display = "block";
-                                const solutionHTML = `<h4 class="text-center">Solution: <br /></h4><p class="text-center pb-2">${result.Result}</p>`;
-                                document.getElementById(
-                                  "test-result-block"
-                                ).innerHTML =
-                                  solutionHTML +
-                                  document.getElementById("test-result-block")
-                                    .innerHTML;
+                                document.getElementById("loader").style.display = "none";
+                                document.getElementById("test-result-label").style.display = "block";
+
+                                solutionHTML = `<h4 class="text-center">Solution: <br /></h4><p class="text-center pb-2">${result.Result}</p>`;
+                                document.getElementById("test-result-block").innerHTML = solutionHTML +
+                                  document.getElementById("test-result-block").innerHTML;
                               });
                             } else if (result.Status == "Testing failed") {
                               console.log("Testing failed", result);
