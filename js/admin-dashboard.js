@@ -424,7 +424,7 @@ $(document).on("click", ".insert_course_not_yet_added", function(){
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
     var config_add_user = {
         method: "post",
-        url: `https://course.simplebar.dk/api/course/${id_course}/user/${used_user_id}`,
+        url: `https://admin.simplebar.dk/api/course/${id_course}/user/${used_user_id}`,
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     };
     axios(config_add_user).then(function (response) {
