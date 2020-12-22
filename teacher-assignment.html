@@ -90,11 +90,17 @@
                                     style="background-color: lavender;">
 
                                     <h3 class="pt-5 pb-3 text-dark text-center">Upload your Docker file</h3>
-                                    <form class="form pb-5" id="myForm">
-                                        <input type="file" name="image" id="input-file">
+                                    <form class="form pb-5" id="myDockerForm">
+                                        <input type="file" name="image" id="input-docker-file">
                                         <input type="hidden" value="1" name="solution" id="assignment_id">
                                         <button type="submit" class="btn btn-success"> Upload </button>
                                     </form>   
+                                    <form class="form mb-5" id="myForm">
+                                        <input type="file" name="solution" id="input-file">
+                                        <input type="hidden" value="1" name="solution" id="assignment_id">
+                                        <button type="submit" class="btn btn-success"> Upload </button>
+                                    </form> 
+                                    <h3 id="test-result-label" class="d-none pt-3 text-dark">Test Result</h3> 
                                     <p id="test-result-block" class="text-justify pr-3 text-dark custom-scrollbar">
                                         <iframe id="assignment-user" scrolling="yes" frameborder="0" marginwidth="0" marginheight="0" style="width:100%;height:700px;"></iframe>
                                     </p>

@@ -49,51 +49,51 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const inputFile = document.getElementById("input-file");
 
         myForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          document.getElementById("loader").style.display = "inline-block";  
-          const endPoint = "https://upload.simplebar.dk/api/solution";
-          const formData = new FormData();
-          //Append solution zip file
-          formData.append("solution", inputFile.files[0]);
+            e.preventDefault();
+            document.getElementById("loader").style.display = "inline-block";  
+            const endPoint = "https://upload.simplebar.dk/api/solution";
+            const formData = new FormData();
+            //Append solution zip file
+            formData.append("solution", inputFile.files[0]);
 
-          //Append assignmentID
-          console.log(
-            "Assign_ID",
-            document.getElementById("assignment_id").value
-          );
+            //Append assignmentID
+            console.log(
+              "Assign_ID",
+              document.getElementById("assignment_id").value
+            );
 
-          formData.append(
-            "assignment_id",
-            document.getElementById("assignment_id").value
-          );
-          console.log("FormData", formData);
-          console.log("Inputfile", inputFile.files[0]);
-          console.log("Solution upload API called");
-          $.ajax(
-            {
-              url: endPoint,
-              type: "POST",
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              },
-              data: formData,
-              cache: false,
-              contentType: false,
-              processData: false,
-              success: function (result) {
-                console.log("Solution uploaded successfully", result);
-                document.getElementById("loader").style.display = "none";  
-                Swal.fire({
-                  icon: "success",
-                  title: "Solution uploaded successfully!",
-                  text:
-                    "Please wait after clicking 'OK' button",
-                  footer:
-                    "Test files will run your solution",
-                }).then(() =>{
-                  document.getElementById("loader").style.display = "inline-block";                          
-                  continueFetching();
-                })
+            formData.append(
+              "assignment_id",
+              document.getElementById("assignment_id").value
+            );
+            console.log("FormData", formData);
+            console.log("Inputfile", inputFile.files[0]);
+            console.log("Solution upload API called");
+            $.ajax(
+              {
+                url: endPoint,
+                type: "POST",
+                headers: {
+                  Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                },
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                  console.log("Solution uploaded successfully", result);
+                  document.getElementById("loader").style.display = "none";  
+                  Swal.fire({
+                    icon: "success",
+                    title: "Solution uploaded successfully!",
+                    text:
+                      "Please wait after clicking 'OK' button",
+                    footer:
+                      "Test files will run your solution",
+                  }).then(() =>{
+                    document.getElementById("loader").style.display = "inline-block";                          
+                    continueFetching();
+                  })
 
                 function continueFetching() {
                   setTimeout(() => {
