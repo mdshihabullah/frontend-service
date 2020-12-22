@@ -104,14 +104,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           });
         }
         if (result.status === 200) {
-          Swal.fire({
-            icon: "success",
-            title: "Solution downloaded!",
-            text: `Please click 'OK' to see the solution in a new tab`,
-          }).then(() => {
-            var w = window.open("");
-            w.document.write(`<p>${result.responseText}</p>`);
-          });
+          window.open('https://upload.simplebar.dk/api/solution?solution_id=' + solution_id);
         } else {
           Swal.fire({
             icon: "error",
