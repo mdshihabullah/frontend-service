@@ -243,20 +243,35 @@ $(document).on("click", ".get_details", function(){
     })
 
 });
+
 $(document).on("click", ".get_assignments", function(){
     $('#table_assignment tbody').empty();
     let course_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
-    console.log(courses_used)
-    for (let i = 0; i < courses_used.length; i++){
-        let course = courses_used[i]
-        if (course.id === Number(course_id)){
-            assignment_used = course["assignments"]
-            insert_assignment(course["assignments"])
-            course_id_used = course_id
-            break
-        }
-
+    let config_get_user_courses = {
+        method: "get",
+        url: `https://admin.simplebar.dk/api/user/${used_user_id}`,
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     }
+    axios(config_get_user_courses).then(function (response) {
+        let user_courses =  response.data["courses"]
+
+        for (let i = 0; i < user_courses.length; i++){
+            let course = user_courses[i]
+            if (course.id === Number(course_id)){
+                assignment_used = course["assignments"]
+                course_id_used = course_id
+                break
+            }
+
+        }
+        insert_assignment(assignment_used)
+    }).catch(function (error){
+        if (error.response) {
+            console.log("failed to get courses")
+        }
+    })
+
+
 });
 
 
@@ -472,6 +487,8 @@ $(document).on("click", ".get_nonadded_assignment", function() {
     $('#table_assignment tbody').empty();
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
     let user_id = used_user_id
+
+
     let config_user_assignment = {
         method: "get",
         url: `https://admin.simplebar.dk/api/courses`,
@@ -480,27 +497,33 @@ $(document).on("click", ".get_nonadded_assignment", function() {
     axios(config_user_assignment).then(function (response) {
         let assignment = response.data["courses"].filter(course => course.id === Number(id_course))[0]["assignments"]
         if(assignment == null) return
-        console.log(assignment)
-        for (let i = 0; i < courses_used.length; i++){
-            let course = courses_used[i]
-            if (course.id ===  Number(id_course)){
-                assignment_used = course["assignments"]
-                course_id_used = id_course
-                break
-            }
+        //console.log(assignment)
+        var config_get_user = {
+            method: "get",
+            url: `https://admin.simplebar.dk/api/user/${user_id}`,
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        };
+        axios(config_get_user).then(function (response) {
+            let user_assignment = response.data["courses"]
+            let assignment_of_user = getcourse(user_assignment, id_course)
 
-        }
-        console.log(assignment_used,  assignment)
-        let availbe_courses = []
-        for(let i = 0; i < assignment.length; i++){
-            let check = true
-            for (let j = 0; j < assignment_used.length; j++){
-                if(assignment[i].id === assignment_used[j].id) check = false
+            let availbe_courses = []
+            for(let i = 0; i < assignment.length; i++){
+                let check = true
+                for (let j = 0; j < assignment_of_user.length; j++){
+                    if(assignment[i].id === assignment_of_user[j].id) check = false
+                }
+                if(check)availbe_courses.push(assignment[i])
             }
-            if(check)availbe_courses.push(assignment[i])
-        }
-        assignment_used = availbe_courses
-        insert_assignment_not_yet_added(availbe_courses)
+            assignment_used = availbe_courses
+            insert_assignment_not_yet_added(availbe_courses)
+
+        }).catch(function (error){
+            if (error.response) {
+                console.log("failed to get participans")
+            }
+        })
+
         /*
         let users_assignment = courses_used.filter(course => course.id === Number(id_course))["assignments"]
         if(users_assignment == null) users_assignment = []
@@ -575,3 +598,15 @@ function getcourses(){
 
 }
 
+function getcourse(courses, course_id){
+    for (let i = 0; i < courses.length; i++){
+
+        if(courses[i].id === Number(course_id)){
+
+            return courses[i]["assignments"]
+        }
+
+
+    }
+    return null
+}
