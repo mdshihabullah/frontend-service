@@ -115,6 +115,9 @@ function insert_data(table, array_of_user_object, i){
     email_cell.innerHTML = array_of_user_object[i]["email"]
     role_cell.innerHTML = array_of_user_object[i]["role"]
     if (array_of_user_object[i]["role"][0] === "student"  )action_cell.innerHTML = "<a class = 'delete'><i   class='fa fa-trash'></i></a>"+ "<a class = 'get_details'> <i   class='fas fa-user'></i> </a>" +  "<a class = 'get_nonadded_course'><i   class='fas fa-user-plus'></i></a>"
+    else{
+        action_cell.innerHTML = "<a class = 'delete'><i   class='fa fa-trash'></i></a>"
+    }
 }
 
 
@@ -278,7 +281,7 @@ $(document).on("click", ".delete", function(){
             };
             axios(config_user_delete).then(function (response) {
                 console.log(response.data);
-                $('#table_users tbody').empty();
+                $('#table tbody').empty();
                 deleterow(email_of_person)
                 insertdataintotable(user_objects)
 
