@@ -323,8 +323,9 @@ $(document).on("click", ".delete_assignment", function(){
                 headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
             };
 
+
+
             axios(config_assignment_delete).then(function (response) {
-                let assignment_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
                 remove_assignment_from_table(assignment_id)
                 $('#table_assignment tbody').empty();
                 insertassignmentintotable(find_course(course_id_used))
