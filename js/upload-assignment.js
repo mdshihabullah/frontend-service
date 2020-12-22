@@ -40,6 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             makeAssignmentData.append("title", document.getElementById("title").value);
             makeAssignmentData.append("public", parseInt(document.querySelector('input[type=radio]:checked').value));
             makeAssignmentData.append("description",inputPDFFile.files[0]);
+            makeAssignmentData.append("timeout",document.getElementById("timeout").value);
             const course_id = parseInt(document.getElementById("course_id").value);
             const assignment_title = document.getElementById("title").value;
             //TODO
