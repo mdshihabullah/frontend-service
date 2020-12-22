@@ -106,7 +106,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                   Swal.fire({
                     icon: "error",
                     title: "Docker file upload failed",
-                    text: `${result.responseJSON.message}`,
+                    text: "Please contact technical support or administrator.",
                   });
                 },
               },
@@ -114,17 +114,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
             );
           });
 
-
+          //Check file size
+          this.validateFileSize("input-file");
           //UPLOAD ASSIGNMENT
           const myForm = document.getElementById("myForm");
           const inputFile = document.getElementById("input-file");
 
-
           myForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            //Check file size
-            this.validateSolutionFileSize();
-            
             document.getElementById("loader").style.display = "inline-block";
             const endPoint = "https://upload.simplebar.dk/api/solution";
             const formData = new FormData();
@@ -343,45 +340,17 @@ function validateFileSize(input_id) {
           text: "The file you are trying to upload is not valid",
           footer: "Please try to upload .zip file.",
         }).then(() => {
-          $(input_id).val("");
+          $("#input-file").val("");
         });
       }
       return true;
-    } else if (inputDockerFile.files[0] === undefined) {
+    } else if (inputFile.files[0] == undefined) {
       Swal.fire({
         icon: "error",
         title: "No file has been selected",
         text: "Please select a file to upload",
       });
       return false;
-    } else {
-      $(input_id).val("");
-      Swal.fire({
-        icon: "error",
-        title: "Too large file",
-        text: "The file exceeded the size limit",
-        footer: "Please try to upload .zip file less than or equal to 5 MB.",
-      });
-      return false;
-    }
-  });
-}
-
-function validateSolutionFileSize() {
-  $("#input-file").on("change", function () {
-    const size = (this.files[0].size / 1024 / 1024).toFixed(2);
-    if (size <= 10) {
-      const extension = this.files[0].type.split("/")[1];
-      if ("application/x-zip-compressed".indexOf(extension) == -1) {
-        Swal.fire({
-          icon: "error",
-          title: "Invalid file",
-          text: "The file you are trying to upload is not valid",
-          footer: "Please try to upload .zip file.",
-        });
-        return false;
-      }
-      return true;
     } else {
       $("#input-file").val("");
       Swal.fire({
@@ -390,7 +359,6 @@ function validateSolutionFileSize() {
         text: "The file exceeded the size limit",
         footer: "Please try to upload .zip file less than or equal to 5 MB.",
       });
-      document.getElementById("loader").style.display = "none";
       return false;
     }
   });

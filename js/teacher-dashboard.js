@@ -121,7 +121,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                       let deadline = new Date(
                         assignment.due_date
                       ).toDateString();
-                      let assignment_desc = assignment.description_path;
+                      let assignment_desc = assignment.description;
 
                       list_tab_html_content += `<div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="mb-1 d-flex w-100 justify-content-between">
