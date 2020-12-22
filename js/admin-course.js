@@ -499,23 +499,7 @@ $(document).on("click", ".add_user_assignment", function() {
     let assignment_name = $(this).parents("tr")[0]["childNodes"][0].innerText
 
     let assignment_id = $(this).parents("tr")[0]["childNodes"][1].innerText
-    let config_get_user_list = {
-        method: "get",
-        url: `https://admin.simplebar.dk/api/user_list`,
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-    }
-    axios(config_get_user_list).then(function (response) {
-        all_users = []
-        for (let i = 0; i< response.data["list"].length; i++){
-            let user = response.data["list"][i]
-            if(!user["role"].includes("student")) continue
-            all_users.push({
-                id:user["id"],
-                role: user["role"],
-                name: user["name"],
-                email: user["email"]
-            })
-        }
+
         var config_get_users = {
             method: "get",
             url: `https://course.simplebar.dk/api/assignment/${assignment_id}`,
@@ -542,12 +526,6 @@ $(document).on("click", ".add_user_assignment", function() {
                 console.log("failed to get participans")
             }
         })
-
-    }).catch(function (error){
-        if (error.response) {
-            console.log("failed to get users")
-        }
-    })
 })
 
 $(document).on("click", ".add_course_to_user_not_yet_on_in", function() {

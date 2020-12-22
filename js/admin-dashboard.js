@@ -104,6 +104,7 @@ function insertdataintotable(array_of_user_object){
 }
 
 function insert_data(table, array_of_user_object, i){
+
     let row = table.insertRow(0);
     let name_cell = row.insertCell(0);
     let email_cell = row.insertCell(1);
@@ -113,7 +114,7 @@ function insert_data(table, array_of_user_object, i){
     name_cell.innerHTML = name
     email_cell.innerHTML = array_of_user_object[i]["email"]
     role_cell.innerHTML = array_of_user_object[i]["role"]
-    action_cell.innerHTML = "<a class = 'delete'><i   class='fa fa-trash'></i></a>"+ "<a class = 'get_details'> <i   class='fas fa-user'></i> </a>" +  "<a class = 'get_nonadded_course'><i   class='fas fa-user-plus'></i></a>"
+    if (array_of_user_object[i]["role"][0] === "student"  )action_cell.innerHTML = "<a class = 'delete'><i   class='fa fa-trash'></i></a>"+ "<a class = 'get_details'> <i   class='fas fa-user'></i> </a>" +  "<a class = 'get_nonadded_course'><i   class='fas fa-user-plus'></i></a>"
 }
 
 
@@ -242,7 +243,7 @@ $(document).on("click", ".get_details", function(){
 $(document).on("click", ".get_assignments", function(){
     $('#table_assignment tbody').empty();
     let course_id = $(this).parents("tr")[0]["childNodes"][1].innerHTML
-
+    console.log(courses_used)
     for (let i = 0; i < courses_used.length; i++){
         let course = courses_used[i]
         if (course.id === Number(course_id)){
@@ -423,7 +424,7 @@ $(document).on("click", ".insert_course_not_yet_added", function(){
     let id_course = $(this).parents("tr")[0]["childNodes"][1].innerText
     var config_add_user = {
         method: "post",
-        url: `https://admin.simplebar.dk/api/course/${id_course}/user/${used_user_id}`,
+        url: `https://course.simplebar.dk/api/course/${id_course}/user/${used_user_id}`,
         headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     };
     axios(config_add_user).then(function (response) {
@@ -476,16 +477,17 @@ $(document).on("click", ".get_nonadded_assignment", function() {
     axios(config_user_assignment).then(function (response) {
         let assignment = response.data["courses"].filter(course => course.id === Number(id_course))[0]["assignments"]
         if(assignment == null) return
-
+        console.log(assignment)
         for (let i = 0; i < courses_used.length; i++){
             let course = courses_used[i]
-            if (course.id === Number(id_course)){
+            if (course.id ===  Number(id_course)){
                 assignment_used = course["assignments"]
                 course_id_used = id_course
                 break
             }
 
         }
+        console.log(assignment_used,  assignment)
         let availbe_courses = []
         for(let i = 0; i < assignment.length; i++){
             let check = true
