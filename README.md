@@ -535,8 +535,7 @@ and-git-flow-52ebb4efd3db/
 
 [15] https://www.nginx.com/products/nginx-ingress-controller/
 
-[16] https://medium.com/swlh/kubernetes-ingress-controller-overview-
-81abbaca19ec
+[16] https://medium.com/swlh/kubernetes-ingress-controller-overview-81abbaca19ec
 
 [17] https://www.linkedin.com/pulse/cap-theorem-explained-pradeep-kumar
 
