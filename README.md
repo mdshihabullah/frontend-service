@@ -513,19 +513,31 @@ distributed as it will not be partition-tolerant.[17]
 
 [5] https://aws.amazon.com/s3/
 
-[6] https://relevant.software/blog/microservices-database-management/.
+[6] https://relevant.software/blog/microservices-database-management/
+
 [7] https://medium.com/@sherryhsu/session-vs-token-based-authentication-
-11a6c5ac45e4k/.
-[8] https://usersnap.com/blog/gitlab-github/.
+11a6c5ac45e4k/
+
+[8] https://usersnap.com/blog/gitlab-github/
+
 [9] https://medium.com/jamalsoliva/git-workflows-centralized-featured-branch-
-and-git-flow-52ebb4efd3db/.
-[10] https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres/.
-[11] https://www.guru99.com/digitalocean-vs-aws.html.
-[12] https://stackify.com/kubernetes-docker-deployments/.
-[13] https://serverguy.com/comparison/apache-vs-nginx/.
-[14] https://www.hostingadvice.com/how-to/nginx-vs-apache/.
-[15] https://www.nginx.com/products/nginx-ingress-controller/.
+and-git-flow-52ebb4efd3db/
+
+[10] https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres/
+
+[11] https://www.guru99.com/digitalocean-vs-aws.html
+
+[12] https://stackify.com/kubernetes-docker-deployments/
+
+[13] https://serverguy.com/comparison/apache-vs-nginx/
+
+[14] https://www.hostingadvice.com/how-to/nginx-vs-apache/
+
+[15] https://www.nginx.com/products/nginx-ingress-controller/
+
 [16] https://medium.com/swlh/kubernetes-ingress-controller-overview-
 81abbaca19ec
-[17] https://www.linkedin.com/pulse/cap-theorem-explained-pradeep-kumar.
+
+[17] https://www.linkedin.com/pulse/cap-theorem-explained-pradeep-kumar
+
 [18] https://downey.io/blog/desired-state-vs-actual-state-in-kubernetes/
