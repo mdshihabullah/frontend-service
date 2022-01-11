@@ -503,11 +503,16 @@ distributed as it will not be partition-tolerant.[17]
 
 ## References
 
-[1] https://lumen.laravel.com/.
-[2] https://web.archive.org/web/20171117015927/http://flask.pocoo.org/docs/0.10/foreword.
-[3] https://www.docker.com/resources/what-container.
-[4] https://kubernetes.io/.
-[5] https://aws.amazon.com/s3/.
+[1] https://lumen.laravel.com/
+
+[2] https://web.archive.org/web/20171117015927/http://flask.pocoo.org/docs/0.10/foreword
+
+[3] https://www.docker.com/resources/what-container
+
+[4] https://kubernetes.io/
+
+[5] https://aws.amazon.com/s3/
+
 [6] https://relevant.software/blog/microservices-database-management/.
 [7] https://medium.com/@sherryhsu/session-vs-token-based-authentication-
 11a6c5ac45e4k/.
